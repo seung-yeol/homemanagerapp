@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">집안꼴이 이게뭐니</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="doing">이날까지 하셔야합니다</string>
+
+    <string name="noti_title"><b>집안꼴이 이게뭐니!</b></string>
+
+    <string name="open_swipe">https://github.com/romannurik/Android-SwipeToDismiss
+        \n Apache License 2.0 \n Published by romannurik</string>
+    <string name="open_icon_face">http://www.flaticon.com/packs/emotions-assets
+        \n CC 3.0 BY \n Published by Baianat</string>
+    <string name="open_icon_main">http://www.flaticon.com/packs/essential-icons
+        \n CC 3.0 BY \n Published by Bryn Taylor</string>
+    <string name="open_icon_other">http://file000.flaticon.com/downloads/license/license.pdf
+        \n Free License \n designed by from Flaticon</string>
+    <string name="open_image">http://www.freepik.com
+        \n License free \n Designed by Kamimiart / Freepik</string>
+</resources>

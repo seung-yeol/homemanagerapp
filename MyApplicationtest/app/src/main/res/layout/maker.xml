@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/thanks2">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="문의사항은 \n oks153123@naver.com\n 이쪽으로 보내주세요"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="50dp"
+        android:id="@+id/textView2" />
+
+
+
+</RelativeLayout>

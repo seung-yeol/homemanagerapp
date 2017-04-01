@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/main_go"
+            android:icon="@mipmap/ic_main_go"
+            android:title="메인" />
+        <item
+            android:id="@+id/laundry"
+            android:icon="@mipmap/ic_laundry"
+            android:title="빨래" />
+        <item
+            android:id="@+id/clear_up"
+            android:icon="@mipmap/ic_cleaner"
+            android:title="청소" />
+        <item
+            android:id="@+id/refrigerator"
+            android:icon="@mipmap/ic_refrigerator"
+            android:title="냉장고" />
+    </group>
+
+    <item android:title="ETC">
+        <menu>
+            <item
+                android:id="@+id/nav_developer"
+                android:icon="@mipmap/ic_me"
+                android:title="제작자" />
+            <item
+                android:id="@+id/nav_license"
+                android:icon="@drawable/ic_android_black_24dp"
+                android:title="오픈소스라이센스" />
+        </menu>
+    </item>
+
+</menu>
