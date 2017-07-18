@@ -29,12 +29,8 @@ public class NavigationActivity extends AppCompatActivity
     FragmentManager FragM = getFragmentManager();
     FragmentTransaction transaction = FragM.beginTransaction();
 
-    final static int Clear_up = 1;
-    final static int Laundry = 2;
-    final static int Refrigerator = 3;
-    final static int Main = 4;
-    final static int Developer = 5;
-    final static int license = 5;
+
+    private StatusSave statusSave = StatusSave.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,34 +95,35 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.laundry) {
-            frag_select(new LaundryFragment(),"빨래",Laundry);
+            frag_select(new LaundryFragment(),"빨래",Category.Laundry);
         } else if (id == R.id.refrigerator) {
-            frag_select(new RefrigeratorFragment(),"냉장고",Refrigerator);
+            frag_select(new RefrigeratorFragment(),"냉장고",Category.Refrigerator);
         } else if (id == R.id.clear_up) {
-            frag_select(new ClearupFragment(),"청소",Clear_up);
+            frag_select(new ClearupFragment(),"청소",Category.Clearup);
         } else if (id == R.id.nav_developer) {
-            frag_select(new DeveloperFragment(),"개발자",Developer);
+            frag_select(new DeveloperFragment(),"개발자",Category.Developer);
         } else if (id == R.id.nav_license) {
-            frag_select(new LicenseFragment(),"오픈소스 라이센스",license);
+            frag_select(new LicenseFragment(),"오픈소스 라이센스",Category.License);
         } else if (id == R.id.main_go) {
-            frag_select(new MainFragment(),"집안꼴이 이게뭐니",Main);
+            frag_select(new MainFragment(),"집안꼴이 이게뭐니",Category.Developer);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void setFragment(Fragment Frag, String str){
+
+    public void frag_select(Fragment frag, String AcBarStr ,Category Category){
+        statusSave.setCategory(Category);
+        setFragment( frag , AcBarStr);
+    }
+
+    public void setFragment(Fragment Frag, String AcBarStr){
         FragmentManager FragM = getFragmentManager();
         FragmentTransaction transaction = FragM.beginTransaction();
 
-        getSupportActionBar().setTitle(str);
+        getSupportActionBar().setTitle(AcBarStr);
 
         transaction.replace(R.id.frag,Frag);
         transaction.commit();
-    }
-    public void frag_select(Fragment frag,String str,int i){
-        StatusSave an = new StatusSave();
-        an.setNumber(i);
-        setFragment(frag,str);
     }
 }

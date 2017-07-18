@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.sy.myapplication.AdderActivity.RefrigeratorAdderActivity;
+import com.example.sy.myapplication.AdderActivity.AdderActivity;
+import com.example.sy.myapplication.Category;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DialogUtil;
@@ -23,20 +24,20 @@ import com.melnykov.fab.FloatingActionButton;
 public class RefrigeratorFragment extends Fragment{
     private FloatingActionButton fab;
 
-    final static int urgent = 1;
-    final static int warning = 2;
-    final static int normal = 3;
-    final static int Refrigerator = 3;
+    private final static int urgent = 1;
+    private final static int warning = 2;
+    private final static int normal = 3;
+    private final static int Refrigerator = 3;
 
-    ArrayListUtil ALU = new ArrayListUtil();
-    DialogUtil dialogU = new DialogUtil();
-    StatusSave stat = new StatusSave();
-    TabHostUtil THU = new TabHostUtil();
+    private ArrayListUtil ALU = new ArrayListUtil();
+    private DialogUtil dialogU = new DialogUtil();
+    private StatusSave stat = StatusSave.getInstance();
+    private TabHostUtil THU = new TabHostUtil();
 
-    ListView lv1;
-    ListView lv2;
-    ListView lv3;
-    static ListView D_lv;
+    private ListView lv1;
+    private ListView lv2;
+    private ListView lv3;
+    private ListView D_lv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +45,7 @@ public class RefrigeratorFragment extends Fragment{
 
         View root = inflater.inflate(R.layout.fragment_sub,null);
 
-        stat.setNumber(Refrigerator);
+        stat.setCategory(Category.Refrigerator);
         stat.setTabNumber(urgent);
 
         setFloatngButton(root);
@@ -53,7 +54,7 @@ public class RefrigeratorFragment extends Fragment{
         lv2 = (ListView)root.findViewById(R.id.list4);
         lv3 = (ListView)root.findViewById(R.id.list5);
         THU.set_tabhost(root,lv1,lv2,lv3);
-        stat.setD_lv(lv1);
+        stat.setListView(lv1);
 
         list_setting(lv1,urgent);
         list_setting(lv2,warning);
@@ -69,7 +70,7 @@ public class RefrigeratorFragment extends Fragment{
         list_setting(lv3,normal);
     }
 
-    public void list_setting(final ListView lv,final int tabname){
+    private void list_setting(final ListView lv,final int tabname){
         if(tabname==urgent){
             ALU.li_urgent(lv,getActivity(),Refrigerator);
             lv.setOnItemClickListener(mItemClickListener);
@@ -105,7 +106,7 @@ public class RefrigeratorFragment extends Fragment{
         lv.setOnTouchListener(touchListener);
         lv.setOnScrollListener(touchListener.makeScrollListener());
     }
-    public void list_update(DBUtil dbUtil,String title,ListView lv,int tabname){
+    private void list_update(DBUtil dbUtil,String title,ListView lv,int tabname){
         dbUtil.update(title); //드래그시 자동갱신
         if(tabname==urgent){
             ALU.li_urgent(lv,getActivity(),Refrigerator);
@@ -117,20 +118,20 @@ public class RefrigeratorFragment extends Fragment{
             ALU.li_normal(lv,getActivity(),Refrigerator);
         }
     }
-    public void setFloatngButton(View root){
+    private void setFloatngButton(View root){
         fab = (FloatingActionButton)root.findViewById(R.id.adder);
         //fab.attachToListView(listView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RefrigeratorAdderActivity.class);
+                Intent intent = new Intent(getActivity(), AdderActivity.class);
                 startActivity(intent);
             }
         });
     }
 
     //리스트 터치시 다이얼로그 실행 리스너
-    ListView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+    private ListView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             List_Item item = (List_Item) parent.getItemAtPosition(position) ;

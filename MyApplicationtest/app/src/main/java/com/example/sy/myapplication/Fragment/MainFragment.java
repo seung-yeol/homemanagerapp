@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
+import com.example.sy.myapplication.Category;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.DBUtil;
@@ -21,18 +22,17 @@ import com.example.sy.myapplication.Utils.swipe.SwipeDismissListViewTouchListene
 
 
 public class MainFragment extends Fragment{
+    private final int urgent = 1;
+    private final int warning = 2;
 
+    private ArrayListUtil ALU = new ArrayListUtil();
+    private DialogUtil dialogU = new DialogUtil();
+    private TabHostUtil THU = new TabHostUtil();
 
-    final static int urgent = 1;
-    final static int warning = 2;
+    private ListView lv1, lv2;
+    private static ListView D_lv ;
 
-    ArrayListUtil ALU = new ArrayListUtil();
-    DialogUtil dialogU = new DialogUtil();
-    TabHostUtil THU = new TabHostUtil();
-
-    ListView lv1;
-    ListView lv2;
-    static ListView D_lv ;
+    private StatusSave statusSave = StatusSave.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,9 +40,9 @@ public class MainFragment extends Fragment{
 
         View root = inflater.inflate(R.layout.fragment_main,null);
 
-        StatusSave an = new StatusSave();
-        an.setNumber(4);
-        an.setTabNumber(urgent);
+
+        statusSave.setCategory(Category.Main);
+        statusSave.setTabNumber(urgent);
 
         TabHost host = (TabHost)root.findViewById(R.id.tabHost);
         host.setup();
@@ -54,12 +54,12 @@ public class MainFragment extends Fragment{
 
         //Tab 1
         TabHost.TabSpec spec = host.newTabSpec("제발");
-        spec.setContent(R.id.tab1);
+        spec.setContent( R.id.tab1 );
         spec.setIndicator("",i1);
         host.addTab(spec);
         //Tab 2
         spec = host.newTabSpec("주의");
-        spec.setContent(R.id.tab2);
+        spec.setContent( R.id.tab2 );
         spec.setIndicator("",i2);
         host.addTab(spec);
 
@@ -73,14 +73,13 @@ public class MainFragment extends Fragment{
         host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String s) {
-                StatusSave an = new StatusSave();
                 switch (s){
                     case "제발":
-                        an.setTabNumber(urgent);
+                        statusSave.setTabNumber(urgent);
                         D_lv = lv1;
                         break;
                     case "주의":
-                        an.setTabNumber(warning);
+                        statusSave.setTabNumber(warning);
                         D_lv = lv2;
                         break;
                 }
@@ -101,11 +100,11 @@ public class MainFragment extends Fragment{
     };
 
     public void list_setting(final ListView lv,final int tabName){
-        if(tabName==urgent){
+        if(tabName == urgent){
             ALU.li_urgent(lv,getActivity(),4);
             lv.setOnItemClickListener(mItemClickListener);
         }
-        else if(tabName==warning){
+        else if(tabName == warning){
             ALU.li_warning(lv,getActivity(),4);
             lv.setOnItemClickListener(mItemClickListener);
         }

@@ -15,11 +15,6 @@ public class DeveloperFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.maker, null);
 
-
-
-
-
-
         return root;
     }
 }

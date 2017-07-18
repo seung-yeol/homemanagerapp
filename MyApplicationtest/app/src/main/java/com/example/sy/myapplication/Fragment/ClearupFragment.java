@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.sy.myapplication.AdderActivity.ClearupAdderActivity;
+import com.example.sy.myapplication.AdderActivity.AdderActivity;
+import com.example.sy.myapplication.Category;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.DBUtil;
@@ -24,19 +25,19 @@ import com.melnykov.fab.FloatingActionButton;
 public class ClearupFragment extends Fragment{
     private FloatingActionButton fab;
 
-    final static int urgent = 1;
-    final static int warning = 2;
-    final static int normal = 3;
-    final static int Clearup = 1;
+    private final static int urgent = 1;
+    private final static int warning = 2;
+    private final static int normal = 3;
+    private final static int Clearup = 1;
 
-    ArrayListUtil ALU = new ArrayListUtil();
-    DialogUtil dialogU = new DialogUtil();
-    TabHostUtil THU = new TabHostUtil();
-    StatusSave stat = new StatusSave();
+    private ArrayListUtil ALU = new ArrayListUtil();
+    private DialogUtil dialogU = new DialogUtil();
+    private TabHostUtil THU = new TabHostUtil();
+    private StatusSave stat = StatusSave.getInstance();
 
-    public ListView lv1;
-    public ListView lv2;
-    public ListView lv3;
+    private ListView lv1;
+    private ListView lv2;
+    private ListView lv3;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,9 +52,9 @@ public class ClearupFragment extends Fragment{
         lv3 = (ListView)root.findViewById(R.id.list5);
         THU.set_tabhost(root,lv1,lv2,lv3);
 
-        stat.setNumber(Clearup);
+        stat.setCategory(Category.Clearup);
         stat.setTabNumber(urgent);
-        stat.setD_lv(lv1);
+        stat.setListView(lv1);
 
         list_setting(lv1,urgent);
         list_setting(lv2,warning);
@@ -122,7 +123,7 @@ public class ClearupFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(root.getContext(),ClearupAdderActivity.class);
+                Intent intent = new Intent(root.getContext(),AdderActivity.class);
                 startActivity(intent);
             }
         });
@@ -135,7 +136,7 @@ public class ClearupFragment extends Fragment{
             List_Item item = (List_Item) parent.getItemAtPosition(position) ;
             String s = item.getTitle();
 
-            dialogU.dialog(getActivity(),s,stat.D_lv);
+            dialogU.dialog(getActivity(),s,stat.getListView());
             //Log.d("dd", "onItemClick: "+stat.D_lv);
         }
     };

@@ -24,9 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".NavigationActivity" />
-        <activity android:name=".AdderActivity.ClearupAdderActivity" />
-        <activity android:name=".AdderActivity.LaundryAdderActivity" />
-        <activity android:name=".AdderActivity.RefrigeratorAdderActivity" />
+        <activity android:name=".AdderActivity.AdderActivity"/>
 
         <service
             android:name=".Service.MyService"

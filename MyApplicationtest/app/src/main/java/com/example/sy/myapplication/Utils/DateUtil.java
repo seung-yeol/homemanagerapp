@@ -10,7 +10,7 @@ import java.util.Locale;
 public class DateUtil {
     //날짜 덧셈
     //DateAdd(더할 년수 ,더할 월수,더할 일수)
-    static Calendar c = Calendar.getInstance();
+    private static Calendar c = Calendar.getInstance();
     public String DateAdd(int year, int month, int day){
         Calendar cal = new GregorianCalendar(Locale.KOREA);
         cal.setTime(new Date());

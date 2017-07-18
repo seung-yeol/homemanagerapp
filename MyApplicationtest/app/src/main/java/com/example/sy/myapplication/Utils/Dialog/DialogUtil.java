@@ -25,6 +25,8 @@ public class DialogUtil extends AppCompatActivity {
     DateUtil DateU = new DateUtil();
     ArrayListUtil ALU = new ArrayListUtil();
 
+    StatusSave an = StatusSave.getInstance();
+
     //Warning w = new Warning();
     public static String s;
     public AlertDialog.Builder builder;
@@ -49,50 +51,51 @@ public class DialogUtil extends AppCompatActivity {
 
         // 여기서부터는 알림창의 속성 설정
         builder.setMessage(dbs)        // 메세지 설정
-        .setCancelable(true)        // 뒤로 버튼 클릭시 취소 가능 설정
-        .setNegativeButton("삭제",
-            new DialogInterface.OnClickListener(){
-                // 삭제 버튼 클릭시 설정
-                public void onClick(DialogInterface dialog, int whichButton){
-                    dbUtil.delete(str);
-                    StatusSave an = new StatusSave();
-                    if (an.TabNumber==1){
-                        ALU.li_urgent(lv,c,an.ActNumber);
-                    }
-                    else if(an.TabNumber==2){
-                        ALU.li_warning(lv,c,an.ActNumber);
-                    }
-                    else{
-                        ALU.li_normal(lv,c,an.ActNumber);
-                    }
-                    Intent intent = new Intent(c, MyService.class);
-                    c.startService(intent);
-                    dialog.cancel();
-                }
+               .setCancelable(true)        // 뒤로 버튼 클릭시 취소 가능 설정
+               .setNegativeButton("삭제",
+                    new DialogInterface.OnClickListener(){
+                        // 삭제 버튼 클릭시 설정
+                        public void onClick(DialogInterface dialog, int whichButton){
+                            dbUtil.delete(str);
+                            if (an.getTabNumber()==1){
+                                ALU.li_urgent(lv,c,an.getTabNumber());
+                            }
+                            else if(an.getTabNumber()==2){
+                                ALU.li_warning(lv,c,an.getTabNumber());
+                            }
+                            else{
+                                ALU.li_normal(lv,c,an.getTabNumber());
+                            }
+                            Intent intent = new Intent(c, MyService.class);
+                            c.startService(intent);
+                            dialog.cancel();
+                        }
         });
-        StatusSave an = new StatusSave();
-        if(an.ActNumber!=refrigerator){
+
+        if(an.getTabNumber() != refrigerator){
             builder.setPositiveButton("갱신",
                     new DialogInterface.OnClickListener(){
                         // 갱신 버튼 클릭시 설정
                         public void onClick(DialogInterface dialog, int whichButton) {
                             dbUtil.update(str);
-                            StatusSave an = new StatusSave();
-                            if (an.TabNumber==1){
-                                ALU.li_urgent(lv,c,an.ActNumber);
+
+                            if (an.getTabNumber() == 1){
+                                ALU.li_urgent(lv, c, an.getTabNumber());
                             }
-                            else if(an.TabNumber==2){
-                                ALU.li_warning(lv,c,an.ActNumber);
+                            else if(an.getTabNumber()==2){
+                                ALU.li_warning(lv, c, an.getTabNumber());
                             }
                             else{
-                                ALU.li_normal(lv,c,an.ActNumber);
+                                ALU.li_normal(lv, c, an.getTabNumber());
                             }
+
                             Intent intent = new Intent(c, MyService.class);
                             c.startService(intent);
                             dialog.cancel();
                         }
                     });
         }
+
         AlertDialog dialog = builder.create();    // 알림창 객체 생성
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND); // 뒤에 안어두워짐
         //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0xba333333));;

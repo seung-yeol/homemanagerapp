@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.sy.myapplication.AdderActivity.LaundryAdderActivity;
+import com.example.sy.myapplication.AdderActivity.AdderActivity;
+import com.example.sy.myapplication.Category;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DialogUtil;
@@ -24,25 +25,25 @@ import com.melnykov.fab.FloatingActionButton;
 public class LaundryFragment extends Fragment{
     private FloatingActionButton fab;
 
-    final static int urgent = 1;
-    final static int warning = 2;
-    final static int normal = 3;
-    final static int Laundry = 2;
+    private final static int urgent = 1;
+    private final static int warning = 2;
+    private final static int normal = 3;
+    private final static int Laundry = 2;
 
-    ArrayListUtil ALU = new ArrayListUtil();
-    DialogUtil dialogU = new DialogUtil();
-    StatusSave stat = new StatusSave();
-    TabHostUtil THU = new TabHostUtil();
+    private ArrayListUtil ALU = new ArrayListUtil();
+    private DialogUtil dialogU = new DialogUtil();
+    private StatusSave stat = StatusSave.getInstance();
+    private TabHostUtil THU = new TabHostUtil();
 
-    ListView lv1;
-    ListView lv2;
-    ListView lv3;
+    private ListView lv1;
+    private ListView lv2;
+    private ListView lv3;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View root = inflater.inflate(R.layout.fragment_sub,null);
 
-        stat.setNumber(Laundry);
+        stat.setCategory(Category.Laundry);
         stat.setTabNumber(urgent);
 
         setFloatngButton(root);
@@ -51,7 +52,7 @@ public class LaundryFragment extends Fragment{
         lv2 = (ListView)root.findViewById(R.id.list4);
         lv3 = (ListView)root.findViewById(R.id.list5);
         THU.set_tabhost(root,lv1,lv2,lv3);
-        stat.setD_lv(lv1);
+        stat.setListView(lv1);
         list_setting(lv1,urgent);
         list_setting(lv2,warning);
         list_setting(lv3,normal);
@@ -119,7 +120,7 @@ public class LaundryFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(root.getContext(),LaundryAdderActivity.class);
+                Intent intent = new Intent(root.getContext(),AdderActivity.class);
                 startActivity(intent);
             }
         });
@@ -132,7 +133,7 @@ public class LaundryFragment extends Fragment{
             List_Item item = (List_Item) parent.getItemAtPosition(position) ;
             String s = item.getTitle();
 
-            dialogU.dialog(getActivity(),s,stat.D_lv);
+            dialogU.dialog(getActivity(),s,stat.getListView());
         }
     };
 

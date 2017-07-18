@@ -20,6 +20,8 @@ public class TabHostUtil extends Fragment{
     static Drawable face_2;
     static Drawable face_3;
 
+    private StatusSave statusSave = StatusSave.getInstance();
+
     public void set_tabhost(View root,final ListView lv1,final ListView lv2,final ListView lv3){
         TabHost host = (TabHost)root.findViewById(R.id.tabHost);
         host.setup();
@@ -31,19 +33,18 @@ public class TabHostUtil extends Fragment{
         host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String s) {
-                StatusSave an = new StatusSave();
                 switch (s){
                     case "제발":
-                        an.setTabNumber(urgent);
-                        an.setD_lv(lv1);
+                        statusSave.setTabNumber(urgent);
+                        statusSave.setListView(lv1);
                         break;
                     case "주의":
-                        an.setTabNumber(warning);
-                        an.setD_lv(lv2);
+                        statusSave.setTabNumber(warning);
+                        statusSave.setListView(lv2);
                         break;
                     case "괜춘":
-                        an.setTabNumber(normal);
-                        an.setD_lv(lv3);
+                        statusSave.setTabNumber(normal);
+                        statusSave.setListView(lv3);
                         break;
                 }
             }
