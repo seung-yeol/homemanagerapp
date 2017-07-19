@@ -24,11 +24,6 @@ import com.melnykov.fab.FloatingActionButton;
 public class ClearupFragment extends Fragment{
     private FloatingActionButton fab;
 
-    private final static int urgent = 1;
-    private final static int warning = 2;
-    private final static int NORMAL = 3;
-    private final static int Clearup = 1;
-
     private ArrayListUtil ALU = new ArrayListUtil();
     private DialogUtil dialogU = new DialogUtil();
     private TabHostUtil THU = new TabHostUtil();

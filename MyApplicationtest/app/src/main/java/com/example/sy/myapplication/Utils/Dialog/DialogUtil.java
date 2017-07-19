@@ -31,13 +31,13 @@ public class DialogUtil extends AppCompatActivity {
     private AlertDialog.Builder builder;
 
     //리스트 터치시 다이얼로그 띄우는 함수
-    public void dialog(final Context c, final String name,final ListView lv){
-        builder = new AlertDialog.Builder(c);
+    public void dialog(final Context context, final String name,final ListView lv){
+        builder = new AlertDialog.Builder(context);
 
-        final DBUtil dbUtil = new DBUtil(c, "HomeManager.db", null, 1);
+        final DBUtil dbUtil = new DBUtil(context, "HomeManager.db", null, 1);
         final String dbs = dbUtil.getData(name);
 
-        TextView title = new TextView(c);
+        TextView title = new TextView(context);
         title.setText(name + " 메모 ");
         title.setPadding(10,15,10,15);
         title.setLines(1);
@@ -55,16 +55,16 @@ public class DialogUtil extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int whichButton){
                             dbUtil.delete(name);
                             if (statusSave.getTabGrade() == StatusSave.TabGrade.URGENT){
-                                ALU.li_urgent(lv,c, statusSave.getCategory());
+                                ALU.li_urgent(lv,context, statusSave.getCategory());
                             }
                             else if(statusSave.getTabGrade() == StatusSave.TabGrade.WARNING){
-                                ALU.li_warning(lv,c, statusSave.getCategory());
+                                ALU.li_warning(lv,context, statusSave.getCategory());
                             }
                             else{
-                                ALU.li_normal(lv,c, statusSave.getCategory());
+                                ALU.li_normal(lv,context, statusSave.getCategory());
                             }
-                            Intent intent = new Intent(c, MyService.class);
-                            c.startService(intent);
+                            Intent intent = new Intent(context, MyService.class);
+                            context.startService(intent);
                             dialog.cancel();
                         }
         });
@@ -77,17 +77,17 @@ public class DialogUtil extends AppCompatActivity {
                             dbUtil.update(name);
 
                             if (statusSave.getTabGrade() == StatusSave.TabGrade.URGENT){
-                                ALU.li_urgent(lv, c, statusSave.getCategory());
+                                ALU.li_urgent(lv, context, statusSave.getCategory());
                             }
                             else if(statusSave.getTabGrade() == StatusSave.TabGrade.WARNING){
-                                ALU.li_warning(lv, c, statusSave.getCategory());
+                                ALU.li_warning(lv, context, statusSave.getCategory());
                             }
                             else{
-                                ALU.li_normal(lv, c, statusSave.getCategory());
+                                ALU.li_normal(lv, context, statusSave.getCategory());
                             }
 
-                            Intent intent = new Intent(c, MyService.class);
-                            c.startService(intent);
+                            Intent intent = new Intent(context, MyService.class);
+                            context.startService(intent);
                             dialog.cancel();
                         }
                     });
