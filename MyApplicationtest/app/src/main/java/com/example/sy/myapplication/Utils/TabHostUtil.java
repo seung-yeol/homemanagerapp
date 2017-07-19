@@ -9,9 +9,6 @@ import android.widget.TabHost;
 import com.example.sy.myapplication.R;
 
 public class TabHostUtil extends Fragment{
-    final static int urgent = 1;
-    final static int warning = 2;
-    final static int normal = 3;
     final static String s_urgent = "제발";
     final static String s_warning = "주의";
     final static String s_normal = "괜춘";
@@ -35,15 +32,15 @@ public class TabHostUtil extends Fragment{
             public void onTabChanged(String s) {
                 switch (s){
                     case "제발":
-                        statusSave.setTabNumber(urgent);
+                        statusSave.setTabGrade(StatusSave.TabGrade.URGENT);
                         statusSave.setListView(lv1);
                         break;
                     case "주의":
-                        statusSave.setTabNumber(warning);
+                        statusSave.setTabGrade(StatusSave.TabGrade.WARNING);
                         statusSave.setListView(lv2);
                         break;
                     case "괜춘":
-                        statusSave.setTabNumber(normal);
+                        statusSave.setTabGrade(StatusSave.TabGrade.NORMAL);
                         statusSave.setListView(lv3);
                         break;
                 }

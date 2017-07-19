@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.example.sy.myapplication.Utils.DBUtil;
+import com.example.sy.myapplication.Utils.StatusSave;
 
 
 public class ArrayListUtil implements View.OnTouchListener {
@@ -20,7 +21,7 @@ public class ArrayListUtil implements View.OnTouchListener {
         return false;
     }
     // 시급 리스트 내용
-    public void li_urgent(ListView list , Context c , int type){
+    public void li_urgent(ListView list , Context c , StatusSave.Category category){
         DBUtil mDBUtil = new DBUtil(c, "HomeManager.db", null, 1);
         madapter = new ListAdapter();
 
@@ -29,10 +30,10 @@ public class ArrayListUtil implements View.OnTouchListener {
         listView.setAdapter(madapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        mDBUtil.getTpyeData(type,madapter,end);
+        mDBUtil.getTpyeData( category, madapter,end);
     }
     // 주의 리스트 내용
-    public void li_warning(ListView list , Context c , int type){
+    public void li_warning(ListView list , Context c , StatusSave.Category category){
         DBUtil mDBUtil = new DBUtil(c, "HomeManager.db", null, 1);
         madapter = new ListAdapter();
 
@@ -41,18 +42,18 @@ public class ArrayListUtil implements View.OnTouchListener {
         listView.setAdapter(madapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        mDBUtil.getTpyeData(type,madapter,warning);
+        mDBUtil.getTpyeData( category, madapter,warning);
     }
     // 괜춘 리스트 내용
-    public void li_normal(ListView list , Context c , int type){
+    public void li_normal(ListView list , Context c , StatusSave.Category category){
         DBUtil mDBUtil = new DBUtil(c, "HomeManager.db", null, 1);
         madapter = new ListAdapter();
 
         // 리스트뷰 참조 및 Adapter달기
         listView = list;
-        listView.setAdapter(madapter);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setAdapter( madapter );
+        listView.setChoiceMode( ListView.CHOICE_MODE_SINGLE );
 
-        mDBUtil.getTpyeData(type,madapter,normal);
+        mDBUtil.getTpyeData( category, madapter,normal);
     }
 }

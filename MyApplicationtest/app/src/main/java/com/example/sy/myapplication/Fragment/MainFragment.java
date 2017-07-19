@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
-import com.example.sy.myapplication.Category;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.DBUtil;
@@ -22,9 +21,6 @@ import com.example.sy.myapplication.Utils.swipe.SwipeDismissListViewTouchListene
 
 
 public class MainFragment extends Fragment{
-    private final int urgent = 1;
-    private final int warning = 2;
-
     private ArrayListUtil ALU = new ArrayListUtil();
     private DialogUtil dialogU = new DialogUtil();
     private TabHostUtil THU = new TabHostUtil();
@@ -41,8 +37,8 @@ public class MainFragment extends Fragment{
         View root = inflater.inflate(R.layout.fragment_main,null);
 
 
-        statusSave.setCategory(Category.Main);
-        statusSave.setTabNumber(urgent);
+        statusSave.setCategory(StatusSave.Category.MAIN);
+        statusSave.setTabGrade(StatusSave.TabGrade.URGENT);
 
         TabHost host = (TabHost)root.findViewById(R.id.tabHost);
         host.setup();
@@ -67,19 +63,19 @@ public class MainFragment extends Fragment{
         lv2 = (ListView)root.findViewById(R.id.list2);
         D_lv = lv1;
 
-        list_setting(lv1,urgent);
-        list_setting(lv2,warning);
+        list_setting(lv1, StatusSave.TabGrade.URGENT);
+        list_setting(lv2, StatusSave.TabGrade.WARNING);
 
         host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String s) {
                 switch (s){
                     case "제발":
-                        statusSave.setTabNumber(urgent);
+                        statusSave.setTabGrade(StatusSave.TabGrade.URGENT);
                         D_lv = lv1;
                         break;
                     case "주의":
-                        statusSave.setTabNumber(warning);
+                        statusSave.setTabGrade(StatusSave.TabGrade.WARNING);
                         D_lv = lv2;
                         break;
                 }
@@ -93,19 +89,19 @@ public class MainFragment extends Fragment{
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             List_Item item = (List_Item) parent.getItemAtPosition(position) ;
-            String s = item.getTitle();
+            String name = item.getTitle();
 
-            dialogU.dialog(getActivity(),s,D_lv);
+            dialogU.dialog(getActivity(), name, D_lv);
         }
     };
 
-    public void list_setting(final ListView lv,final int tabName){
-        if(tabName == urgent){
-            ALU.li_urgent(lv,getActivity(),4);
+    public void list_setting(final ListView lv,final StatusSave.TabGrade tabGrade){
+        if(tabGrade == StatusSave.TabGrade.URGENT){
+            ALU.li_urgent(lv,getActivity(), StatusSave.Category.MAIN);
             lv.setOnItemClickListener(mItemClickListener);
         }
-        else if(tabName == warning){
-            ALU.li_warning(lv,getActivity(),4);
+        else if(tabGrade == StatusSave.TabGrade.WARNING){
+            ALU.li_warning(lv,getActivity(), StatusSave.Category.MAIN);
             lv.setOnItemClickListener(mItemClickListener);
         }
         //리스트 슬라이드시
@@ -124,20 +120,20 @@ public class MainFragment extends Fragment{
                                     List_Item item = (List_Item)listView.getAdapter().getItem(position);
                                     String title = item.getTitle();
 
-                                    list_update(dbUtil,title,lv,tabName);
+                                    list_update(dbUtil,title,lv,tabGrade);
                                 }
                             }
                         });
         lv.setOnTouchListener(touchListener);
         lv.setOnScrollListener(touchListener.makeScrollListener());
     }
-    public void list_update(DBUtil dbUtil,String s1,ListView lv,int tabName){
+    public void list_update(DBUtil dbUtil, String s1, ListView lv, StatusSave.TabGrade tabGrade){
         dbUtil.update(s1); //드래그시 자동갱신
-        if(tabName==urgent){
-            ALU.li_urgent(lv,getActivity(),4);
+        if(tabGrade == StatusSave.TabGrade.URGENT){
+            ALU.li_urgent(lv,getActivity(), StatusSave.Category.MAIN);
         }
-        else if(tabName==warning){
-            ALU.li_warning(lv,getActivity(),4);
+        else if(tabGrade == StatusSave.TabGrade.WARNING){
+            ALU.li_warning(lv,getActivity(), StatusSave.Category.MAIN);
         }
     }
     /*
@@ -165,8 +161,8 @@ public class MainFragment extends Fragment{
     @Override
     public void onResume(){
         super.onResume();
-        list_setting(lv1,urgent);
-        list_setting(lv2,warning);
+        list_setting(lv1,StatusSave.TabGrade.URGENT);
+        list_setting(lv2,StatusSave.TabGrade.WARNING);
     }
 }
 

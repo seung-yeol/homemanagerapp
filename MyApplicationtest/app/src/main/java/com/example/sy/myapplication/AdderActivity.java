@@ -1,4 +1,4 @@
-package com.example.sy.myapplication.AdderActivity;
+package com.example.sy.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Service.MyService;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.DateUtil;
@@ -30,8 +29,6 @@ public class AdderActivity extends AppCompatActivity {
 
     private TextView date;
     private static int i;
-    private static String name;
-    private static String memo;
 
     private String hint;
 
@@ -70,28 +67,9 @@ public class AdderActivity extends AppCompatActivity {
         final EditText edit_name = (EditText)findViewById(R.id.edit_name);
         edit_name.setHint(hint);
         edit_name.setHintTextColor(getResources().getColor(R.color.hint));
-        edit_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    name = edit_name.getText().toString();
-                }else {
-                    return;
-                }
-            }
-        });
+
         //포커스가 바뀔 때 작성한 내용 임시 저장후 저장버튼클릭시 저장.
-        final EditText detail = (EditText)findViewById(R.id.editText2);
-        detail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if(!b){
-                    memo = detail.getText().toString();
-                }else {
-                    return;
-                }
-            }
-        });
+        final EditText memo = (EditText)findViewById(R.id.editText2);
 
         date = (TextView)findViewById(R.id.expiry_date) ;
         //버튼클릭시 타임피커 다이얼로그 실행
@@ -99,20 +77,20 @@ public class AdderActivity extends AppCompatActivity {
         btn_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timepickerdialog();
+                timePickerDialog();
             }
         });
 
         //저장버튼 클릭시 db에 내용 저장
-        Button btn_save =(Button)findViewById(R.id.btn_save);
+        Button btn_save = (Button)findViewById(R.id.btn_save);
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(name.equals("")){
+                if(edit_name.getText().toString().equals("")){
                     //이름칸 비었을경우
                     dU.dialog_a(AdderActivity.this,"이름칸이 비었습니다.");
                 }
-                else if(mDBUtil.overlap_check(name)){
+                else if(mDBUtil.overlap_check(edit_name.getText().toString())){
                     //이름이 중복되는경우
                     dU.dialog_a(AdderActivity.this,"중복되는 이름입니다. \n 다시 작성해주세요.");
                 }
@@ -122,7 +100,7 @@ public class AdderActivity extends AppCompatActivity {
                 }
                 else{
                     //다 잘된경우 db에 입력.
-                    DBinsert(mDBUtil, name,dU.s,DateU.ToDay(),DateU.W_Date(i), memo);
+                    DBinsert(mDBUtil, edit_name.getText().toString(), dU.getDate(), DateU.ToDay(), DateU.W_Date(i), memo.getText().toString());
                     Intent intent = new Intent(AdderActivity.this, MyService.class);
                     startService(intent);
                 }
@@ -139,13 +117,13 @@ public class AdderActivity extends AppCompatActivity {
     }
 
     //타임핔ㅓ 다이얼로그 실행함수
-    private void timepickerdialog(){
+    private void timePickerDialog(){
         dU.DialogDatePicker(AdderActivity.this,date);
     }
 
     //db에 내용 저장하는 함수
-    private void DBinsert(DBUtil mDBUtil, String str, String p_d, String t_d, String warning, String memo){
-        mDBUtil.insertData(str, p_d , t_d, warning, memo, statusSave.getCategory().getNum());
+    private void DBinsert(DBUtil mDBUtil, String name, String exripy_date, String today, String warning, String memo){
+        mDBUtil.insertData(name, exripy_date , today, warning, memo, statusSave.getCategory().getNum());
         finish();
     }
 }

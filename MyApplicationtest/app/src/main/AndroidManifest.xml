@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".NavigationActivity" />
-        <activity android:name=".AdderActivity.AdderActivity"/>
+        <activity android:name=".AdderActivity"/>
 
         <service
             android:name=".Service.MyService"

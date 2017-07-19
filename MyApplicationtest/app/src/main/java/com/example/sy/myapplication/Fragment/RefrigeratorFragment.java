@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.sy.myapplication.AdderActivity.AdderActivity;
-import com.example.sy.myapplication.Category;
+import com.example.sy.myapplication.AdderActivity;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DialogUtil;
@@ -23,11 +22,6 @@ import com.melnykov.fab.FloatingActionButton;
 
 public class RefrigeratorFragment extends Fragment{
     private FloatingActionButton fab;
-
-    private final static int urgent = 1;
-    private final static int warning = 2;
-    private final static int normal = 3;
-    private final static int Refrigerator = 3;
 
     private ArrayListUtil ALU = new ArrayListUtil();
     private DialogUtil dialogU = new DialogUtil();
@@ -45,8 +39,8 @@ public class RefrigeratorFragment extends Fragment{
 
         View root = inflater.inflate(R.layout.fragment_sub,null);
 
-        stat.setCategory(Category.Refrigerator);
-        stat.setTabNumber(urgent);
+        stat.setCategory(StatusSave.Category.REFRIGERATOR);
+        stat.setTabGrade(StatusSave.TabGrade.URGENT);
 
         setFloatngButton(root);
 
@@ -56,31 +50,32 @@ public class RefrigeratorFragment extends Fragment{
         THU.set_tabhost(root,lv1,lv2,lv3);
         stat.setListView(lv1);
 
-        list_setting(lv1,urgent);
-        list_setting(lv2,warning);
-        list_setting(lv3,normal);
+        list_setting(lv1, StatusSave.TabGrade.URGENT);
+        list_setting(lv2, StatusSave.TabGrade.WARNING);
+        list_setting(lv3, StatusSave.TabGrade.NORMAL);
 
         return root;
     }
     @Override
     public void onResume(){
         super.onResume();
-        list_setting(lv1,urgent);
-        list_setting(lv2,warning);
-        list_setting(lv3,normal);
+
+        list_setting(lv1, StatusSave.TabGrade.URGENT);
+        list_setting(lv2, StatusSave.TabGrade.WARNING);
+        list_setting(lv3, StatusSave.TabGrade.NORMAL);
     }
 
-    private void list_setting(final ListView lv,final int tabname){
-        if(tabname==urgent){
-            ALU.li_urgent(lv,getActivity(),Refrigerator);
+    private void list_setting(final ListView lv, final StatusSave.TabGrade tabGrade){
+        if(tabGrade == StatusSave.TabGrade.URGENT){
+            ALU.li_urgent(lv, getActivity(), StatusSave.Category.REFRIGERATOR);
             lv.setOnItemClickListener(mItemClickListener);
         }
-        else if(tabname==warning){
-            ALU.li_warning(lv,getActivity(),Refrigerator);
+        else if(tabGrade == StatusSave.TabGrade.WARNING){
+            ALU.li_warning(lv, getActivity(), StatusSave.Category.REFRIGERATOR);
             lv.setOnItemClickListener(mItemClickListener);
         }
         else{
-            ALU.li_normal(lv,getActivity(),Refrigerator);
+            ALU.li_normal(lv, getActivity(), StatusSave.Category.REFRIGERATOR);
             lv.setOnItemClickListener(mItemClickListener);
         }
         //리스트 슬라이드시
@@ -99,23 +94,23 @@ public class RefrigeratorFragment extends Fragment{
                                     List_Item item = (List_Item)listView.getAdapter().getItem(position);
                                     String title = item.getTitle();
 
-                                    list_update(dbUtil,title,lv,tabname);
+                                    list_update( dbUtil, title, lv, tabGrade );
                                 }
                             }
                         });
         lv.setOnTouchListener(touchListener);
         lv.setOnScrollListener(touchListener.makeScrollListener());
     }
-    private void list_update(DBUtil dbUtil,String title,ListView lv,int tabname){
+    private void list_update(DBUtil dbUtil, String title, ListView lv, StatusSave.TabGrade tabGrade){
         dbUtil.update(title); //드래그시 자동갱신
-        if(tabname==urgent){
-            ALU.li_urgent(lv,getActivity(),Refrigerator);
+        if(tabGrade == StatusSave.TabGrade.URGENT){
+            ALU.li_urgent(lv,getActivity(), StatusSave.Category.REFRIGERATOR);
         }
-        else if(tabname==warning){
-            ALU.li_warning(lv,getActivity(),Refrigerator);
+        else if(tabGrade == StatusSave.TabGrade.WARNING){
+            ALU.li_warning(lv,getActivity(), StatusSave.Category.REFRIGERATOR);
         }
-        else if(tabname==normal){
-            ALU.li_normal(lv,getActivity(),Refrigerator);
+        else if(tabGrade == StatusSave.TabGrade.NORMAL){
+            ALU.li_normal(lv,getActivity(), StatusSave.Category.REFRIGERATOR);
         }
     }
     private void setFloatngButton(View root){

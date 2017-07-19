@@ -95,24 +95,24 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.laundry) {
-            frag_select(new LaundryFragment(),"빨래",Category.Laundry);
+            frag_select(new LaundryFragment(),"빨래",StatusSave.Category.LAUNDRY);
         } else if (id == R.id.refrigerator) {
-            frag_select(new RefrigeratorFragment(),"냉장고",Category.Refrigerator);
+            frag_select(new RefrigeratorFragment(),"냉장고",StatusSave.Category.REFRIGERATOR);
         } else if (id == R.id.clear_up) {
-            frag_select(new ClearupFragment(),"청소",Category.Clearup);
+            frag_select(new ClearupFragment(),"청소",StatusSave.Category.CLEARUP);
         } else if (id == R.id.nav_developer) {
-            frag_select(new DeveloperFragment(),"개발자",Category.Developer);
+            frag_select(new DeveloperFragment(),"개발자",StatusSave.Category.DEVELOPER);
         } else if (id == R.id.nav_license) {
-            frag_select(new LicenseFragment(),"오픈소스 라이센스",Category.License);
+            frag_select(new LicenseFragment(),"오픈소스 라이센스",StatusSave.Category.LAUNDRY);
         } else if (id == R.id.main_go) {
-            frag_select(new MainFragment(),"집안꼴이 이게뭐니",Category.Developer);
+            frag_select(new MainFragment(),"집안꼴이 이게뭐니",StatusSave.Category.DEVELOPER);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void frag_select(Fragment frag, String AcBarStr ,Category Category){
+    public void frag_select(Fragment frag, String AcBarStr ,StatusSave.Category Category){
         statusSave.setCategory(Category);
         setFragment( frag , AcBarStr);
     }

@@ -33,14 +33,14 @@ public class DBUtil extends SQLiteOpenHelper {
 
     }
     //데이터 입력시 선언함.
-    public void insertData(String name, String exripy_date, String today, String warning, String detail, int type) {
+    public void insertData(String name, String exripy_date, String today, String warning, String memo, int type) {
         SQLiteDatabase db = getWritableDatabase();
-        String sql = "INSERT INTO HOMEMANAGER VALUES(NULL, '" +name +"', '"+ exripy_date+ "', '" + today  + "', '"+ warning + "', '"+ detail +"', '"+ type +"');";
+        String sql = "INSERT INTO HOMEMANAGER VALUES(NULL, '" +name +"', '"+ exripy_date+ "', '" + today  + "', '"+ warning + "', '"+ memo +"', '"+ type +"');";
         db.execSQL(sql);
         db.close();
     }
     //각각의 리스트 데이터 가져옴.
-    public void getTpyeData(int type, ListAdapter mAdapter, int list){
+    public void getTpyeData(StatusSave.Category category, ListAdapter mAdapter, int list){
         DateUtil DateU = new DateUtil();
         SQLiteDatabase db = getWritableDatabase();
 
@@ -49,7 +49,7 @@ public class DBUtil extends SQLiteOpenHelper {
         String str="";
         int i=0;
         //메인액티비티서는 타입관계없이 시급 주의 다뽑음
-        if(type == 4){
+        if(category == StatusSave.Category.MAIN){
             switch (list){
                 case 1:
                     //시급 리스트 쭉뽑아
@@ -81,7 +81,7 @@ public class DBUtil extends SQLiteOpenHelper {
                 case 1:
                     //시급 리스트 쭉뽑아
                     //만기 오래될수록 위로
-                    Cursor result = db.rawQuery("select NAME from HOMEMANAGER where HWTYPE = "+type+" and EXPIRY_DATE <= "+Today_int+" order by EXPIRY_DATE asc;", null);
+                    Cursor result = db.rawQuery("select NAME from HOMEMANAGER where HWTYPE = "+category.getNum()+" and EXPIRY_DATE <= "+Today_int+" order by EXPIRY_DATE asc;", null);
                     while (result.moveToNext()) {
                         str = result.getString(0);
                         mAdapter.addItem(str);
@@ -92,7 +92,7 @@ public class DBUtil extends SQLiteOpenHelper {
                 case 2:
                     //주의 리스트 쭉뽑아
                     //만기기간 가까운거 위로
-                    Cursor result2 = db.rawQuery("select NAME from HOMEMANAGER where HWTYPE = "+type+" and WARNING <= "+Today_int+" and EXPIRY_DATE >"+Today_int+" order by EXPIRY_DATE asc;;", null);
+                    Cursor result2 = db.rawQuery("select NAME from HOMEMANAGER where HWTYPE = "+category.getNum()+" and WARNING <= "+Today_int+" and EXPIRY_DATE >"+Today_int+" order by EXPIRY_DATE asc;;", null);
                     while (result2.moveToNext()) {
                         str = result2.getString(0);
                         mAdapter.addItem(str);
@@ -103,7 +103,7 @@ public class DBUtil extends SQLiteOpenHelper {
                 case 3:
                     //괜춘 리스트 쭉뽑아
                     //주의기간 가까운거 위로
-                    Cursor result3 = db.rawQuery("select NAME from HOMEMANAGER where HWTYPE = "+type+" and WARNING >"+Today_int+" order by WARNING asc;;", null);
+                    Cursor result3 = db.rawQuery("select NAME from HOMEMANAGER where HWTYPE = "+category.getNum()+" and WARNING >"+Today_int+" order by WARNING asc;;", null);
                     while (result3.moveToNext()) {
                         str = result3.getString(0);
                         mAdapter.addItem(str);
@@ -180,7 +180,7 @@ public class DBUtil extends SQLiteOpenHelper {
         }
     }
     //리스트 갱신시 냉장고 관련인지 확인하는 함수
-    public boolean refrigerator_check(String s,SQLiteDatabase SQD){
+    public boolean refrigerator_check(String s, SQLiteDatabase SQD){
         SQLiteDatabase db = SQD;
 
         Cursor cursor = db.rawQuery("select HWTYPE from HOMEMANAGER where NAME ='"+s+"';", null);

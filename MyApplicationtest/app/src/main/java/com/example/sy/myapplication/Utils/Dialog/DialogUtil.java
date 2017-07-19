@@ -22,26 +22,23 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DialogUtil extends AppCompatActivity {
-    DateUtil DateU = new DateUtil();
-    ArrayListUtil ALU = new ArrayListUtil();
+    private DateUtil DateU = new DateUtil();
+    private ArrayListUtil ALU = new ArrayListUtil();
 
-    StatusSave an = StatusSave.getInstance();
+    private StatusSave statusSave = StatusSave.getInstance();
 
-    //Warning w = new Warning();
-    public static String s;
-    public AlertDialog.Builder builder;
-
-    static int refrigerator =3;
+    private static String date;
+    private AlertDialog.Builder builder;
 
     //리스트 터치시 다이얼로그 띄우는 함수
-    public void dialog(final Context c, final String str,final ListView lv){
+    public void dialog(final Context c, final String name,final ListView lv){
         builder = new AlertDialog.Builder(c);
 
         final DBUtil dbUtil = new DBUtil(c, "HomeManager.db", null, 1);
-        final String dbs = dbUtil.getData(str);
+        final String dbs = dbUtil.getData(name);
 
         TextView title = new TextView(c);
-        title.setText(str+" 세부 내용");
+        title.setText(name + " 메모 ");
         title.setPadding(10,15,10,15);
         title.setLines(1);
         title.setGravity(Gravity.CENTER);
@@ -56,15 +53,15 @@ public class DialogUtil extends AppCompatActivity {
                     new DialogInterface.OnClickListener(){
                         // 삭제 버튼 클릭시 설정
                         public void onClick(DialogInterface dialog, int whichButton){
-                            dbUtil.delete(str);
-                            if (an.getTabNumber()==1){
-                                ALU.li_urgent(lv,c,an.getTabNumber());
+                            dbUtil.delete(name);
+                            if (statusSave.getTabGrade() == StatusSave.TabGrade.URGENT){
+                                ALU.li_urgent(lv,c, statusSave.getCategory());
                             }
-                            else if(an.getTabNumber()==2){
-                                ALU.li_warning(lv,c,an.getTabNumber());
+                            else if(statusSave.getTabGrade() == StatusSave.TabGrade.WARNING){
+                                ALU.li_warning(lv,c, statusSave.getCategory());
                             }
                             else{
-                                ALU.li_normal(lv,c,an.getTabNumber());
+                                ALU.li_normal(lv,c, statusSave.getCategory());
                             }
                             Intent intent = new Intent(c, MyService.class);
                             c.startService(intent);
@@ -72,21 +69,21 @@ public class DialogUtil extends AppCompatActivity {
                         }
         });
 
-        if(an.getTabNumber() != refrigerator){
+        if(statusSave.getCategory() != StatusSave.Category.REFRIGERATOR){
             builder.setPositiveButton("갱신",
                     new DialogInterface.OnClickListener(){
                         // 갱신 버튼 클릭시 설정
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            dbUtil.update(str);
+                            dbUtil.update(name);
 
-                            if (an.getTabNumber() == 1){
-                                ALU.li_urgent(lv, c, an.getTabNumber());
+                            if (statusSave.getTabGrade() == StatusSave.TabGrade.URGENT){
+                                ALU.li_urgent(lv, c, statusSave.getCategory());
                             }
-                            else if(an.getTabNumber()==2){
-                                ALU.li_warning(lv, c, an.getTabNumber());
+                            else if(statusSave.getTabGrade() == StatusSave.TabGrade.WARNING){
+                                ALU.li_warning(lv, c, statusSave.getCategory());
                             }
                             else{
-                                ALU.li_normal(lv, c, an.getTabNumber());
+                                ALU.li_normal(lv, c, statusSave.getCategory());
                             }
 
                             Intent intent = new Intent(c, MyService.class);
@@ -102,7 +99,7 @@ public class DialogUtil extends AppCompatActivity {
         dialog.show();    // 알림창 띄우기
     }
     //리스트 추가시 null인부분이 있는경우 띄워지는 다이얼로그
-    public void dialog_a(Context c, String s){
+    public void dialog_a(Context c, String message){
         builder = new AlertDialog.Builder(c);
 
         TextView title = new TextView(c);
@@ -115,7 +112,7 @@ public class DialogUtil extends AppCompatActivity {
         builder.setCustomTitle(title);
 
         // 여기서 부터는 알림창의 속성 설정
-        builder.setMessage(s)        // 메세지 설정
+        builder.setMessage(message)        // 메세지 설정
                 .setCancelable(true)        // 뒤로 버튼 클릭시 취소 가능 설정
                 .setPositiveButton("확인",
                         new DialogInterface.OnClickListener(){
@@ -142,24 +139,28 @@ public class DialogUtil extends AppCompatActivity {
                     // onDateSet method
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         Calendar cal = Calendar.getInstance();
-                        cal.set(year,monthOfYear,dayOfMonth);
-                        updateDate(tv,cal);
-                        DateU.W_Date_set(cal);
+                        cal.set(year, monthOfYear, dayOfMonth);
+                        updateDate(tv, cal);
+                        DateU.W_Date_set( cal);
                     }
                 };
         DatePickerDialog alert =
                 new DatePickerDialog(context, mDateSetListener, year, month, day);
         alert.show();
     }
+
     //바뀐날짜값 저장되있음.
-    public void updateDate(TextView tv, Calendar c){
+    private void updateDate(TextView tv, Calendar c){
         SimpleDateFormat fm = new SimpleDateFormat(
                 "yyyy - MM - dd");
         String str =  fm.format(c.getTime());
         tv.setText(str);
         SimpleDateFormat fm2 = new SimpleDateFormat(
                 "yyyyMMdd");
-        s = fm2.format(c.getTime());
+        date = fm2.format(c.getTime());
     }
 
+    public String getDate(){
+        return date;
+    }
 }

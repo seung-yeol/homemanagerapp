@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.sy.myapplication.AdderActivity.AdderActivity;
-import com.example.sy.myapplication.Category;
+import com.example.sy.myapplication.AdderActivity;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DialogUtil;
@@ -25,11 +24,6 @@ import com.melnykov.fab.FloatingActionButton;
 public class LaundryFragment extends Fragment{
     private FloatingActionButton fab;
 
-    private final static int urgent = 1;
-    private final static int warning = 2;
-    private final static int normal = 3;
-    private final static int Laundry = 2;
-
     private ArrayListUtil ALU = new ArrayListUtil();
     private DialogUtil dialogU = new DialogUtil();
     private StatusSave stat = StatusSave.getInstance();
@@ -43,8 +37,8 @@ public class LaundryFragment extends Fragment{
                              Bundle savedInstanceState){
         View root = inflater.inflate(R.layout.fragment_sub,null);
 
-        stat.setCategory(Category.Laundry);
-        stat.setTabNumber(urgent);
+        stat.setCategory(StatusSave.Category.LAUNDRY);
+        stat.setTabGrade(StatusSave.TabGrade.URGENT);
 
         setFloatngButton(root);
 
@@ -53,31 +47,31 @@ public class LaundryFragment extends Fragment{
         lv3 = (ListView)root.findViewById(R.id.list5);
         THU.set_tabhost(root,lv1,lv2,lv3);
         stat.setListView(lv1);
-        list_setting(lv1,urgent);
-        list_setting(lv2,warning);
-        list_setting(lv3,normal);
+        list_setting(lv1,StatusSave.TabGrade.URGENT);
+        list_setting(lv2,StatusSave.TabGrade.WARNING);
+        list_setting(lv3,StatusSave.TabGrade.NORMAL);
 
         return root;
     }
     @Override
     public void onResume(){
         super.onResume();
-        list_setting(lv1,urgent);
-        list_setting(lv2,warning);
-        list_setting(lv3,normal);
+        list_setting(lv1,StatusSave.TabGrade.URGENT);
+        list_setting(lv2,StatusSave.TabGrade.WARNING);
+        list_setting(lv3,StatusSave.TabGrade.NORMAL);
     }
 
-    public void list_setting(final ListView lv,final int tabName){
-        if(tabName==urgent){
-            ALU.li_urgent(lv,getActivity(),Laundry);
+    public void list_setting(final ListView lv, final StatusSave.TabGrade tabGrade){
+        if ( tabGrade == StatusSave.TabGrade.URGENT){
+            ALU.li_urgent( lv,getActivity(), StatusSave.Category.LAUNDRY);
             lv.setOnItemClickListener(mItemClickListener);
         }
-        else if(tabName==warning){
-            ALU.li_warning(lv,getActivity(),Laundry);
+        else if(tabGrade == StatusSave.TabGrade.WARNING){
+            ALU.li_warning( lv,getActivity(), StatusSave.Category.LAUNDRY);
             lv.setOnItemClickListener(mItemClickListener);
         }
         else{
-            ALU.li_normal(lv,getActivity(),Laundry);
+            ALU.li_normal(lv,getActivity(),StatusSave.Category.LAUNDRY);
             lv.setOnItemClickListener(mItemClickListener);
         }
         //리스트 슬라이드시
@@ -96,23 +90,23 @@ public class LaundryFragment extends Fragment{
                                     List_Item item = (List_Item)listView.getAdapter().getItem(position);
                                     String title = item.getTitle();
 
-                                    list_update(dbUtil,title,lv,tabName);
+                                    list_update(dbUtil, title, lv, tabGrade);
                                 }
                             }
                         });
         lv.setOnTouchListener(touchListener);
         lv.setOnScrollListener(touchListener.makeScrollListener());
     }
-    public void list_update(DBUtil dbUtil,String title,ListView lv,int tabName){
+    public void list_update(DBUtil dbUtil,String title,ListView lv, StatusSave.TabGrade tabGrade){
         dbUtil.update(title); //드래그시 자동갱신
-        if(tabName==urgent){
-            ALU.li_urgent(lv,getActivity(),Laundry);
+        if(tabGrade == StatusSave.TabGrade.URGENT){
+            ALU.li_urgent(lv,getActivity(), StatusSave.Category.LAUNDRY);
         }
-        else if(tabName==warning){
-            ALU.li_warning(lv,getActivity(),Laundry);
+        else if(tabGrade == StatusSave.TabGrade.WARNING){
+            ALU.li_warning(lv,getActivity(), StatusSave.Category.LAUNDRY);
         }
-        else if(tabName==normal){
-            ALU.li_normal(lv,getActivity(),Laundry);
+        else if(tabGrade == StatusSave.TabGrade.NORMAL){
+            ALU.li_normal(lv,getActivity(), StatusSave.Category.LAUNDRY);
         }
     }
     public void setFloatngButton(final View root){
