@@ -38,7 +38,17 @@ public enum StatusSave {
     }
 
     public enum TabGrade{
-        URGENT, WARNING, NORMAL
+        URGENT(1), WARNING(2), NORMAL(3);
+
+        private int num;
+
+        TabGrade(int num){
+            this.num = num;
+        }
+
+        public int getNum() {
+            return num;
+        }
     }
 
     public enum Category {

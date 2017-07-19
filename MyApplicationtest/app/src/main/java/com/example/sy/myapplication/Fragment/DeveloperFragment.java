@@ -10,9 +10,9 @@ import com.example.sy.myapplication.R;
 
 public class DeveloperFragment extends Fragment {
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View root = inflater.inflate(R.layout.maker, null);
 
         return root;

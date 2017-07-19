@@ -1,8 +1,10 @@
 package com.example.sy.myapplication.Utils.list;
 
 import android.content.Context;
+import android.system.StructStat;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.sy.myapplication.Utils.DBUtil;
@@ -12,9 +14,6 @@ import com.example.sy.myapplication.Utils.StatusSave;
 public class ArrayListUtil implements View.OnTouchListener {
     private ListView listView;
     public ListAdapter madapter;
-    final static int end = 1;
-    final static int warning = 2;
-    final static int normal = 3;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -30,7 +29,7 @@ public class ArrayListUtil implements View.OnTouchListener {
         listView.setAdapter(madapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        mDBUtil.getTpyeData( category, madapter,end);
+        mDBUtil.getTpyeData( category, madapter, StatusSave.getInstance().getTabGrade());
     }
     // 주의 리스트 내용
     public void li_warning(ListView list , Context c , StatusSave.Category category){
@@ -42,7 +41,7 @@ public class ArrayListUtil implements View.OnTouchListener {
         listView.setAdapter(madapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        mDBUtil.getTpyeData( category, madapter,warning);
+        mDBUtil.getTpyeData( category, madapter, StatusSave.getInstance().getTabGrade());
     }
     // 괜춘 리스트 내용
     public void li_normal(ListView list , Context c , StatusSave.Category category){
@@ -54,6 +53,6 @@ public class ArrayListUtil implements View.OnTouchListener {
         listView.setAdapter( madapter );
         listView.setChoiceMode( ListView.CHOICE_MODE_SINGLE );
 
-        mDBUtil.getTpyeData( category, madapter,normal);
+        mDBUtil.getTpyeData( category, madapter, StatusSave.getInstance().getTabGrade());
     }
 }

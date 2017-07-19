@@ -40,7 +40,7 @@ public class DBUtil extends SQLiteOpenHelper {
         db.close();
     }
     //각각의 리스트 데이터 가져옴.
-    public void getTpyeData(StatusSave.Category category, ListAdapter mAdapter, int list){
+    public void getTpyeData(StatusSave.Category category, ListAdapter mAdapter, StatusSave.TabGrade tabGrade){
         DateUtil DateU = new DateUtil();
         SQLiteDatabase db = getWritableDatabase();
 
@@ -50,7 +50,7 @@ public class DBUtil extends SQLiteOpenHelper {
         int i=0;
         //메인액티비티서는 타입관계없이 시급 주의 다뽑음
         if(category == StatusSave.Category.MAIN){
-            switch (list){
+            switch (tabGrade.getNum()){
                 case 1:
                     //시급 리스트 쭉뽑아
                     //지난지 오래될수록 위로
@@ -77,7 +77,7 @@ public class DBUtil extends SQLiteOpenHelper {
         }
         //냉장고 청소 빨래 각각의 시급 주의 노멀 리스트
         else {
-            switch (list){
+            switch (tabGrade.getNum()){
                 case 1:
                     //시급 리스트 쭉뽑아
                     //만기 오래될수록 위로
