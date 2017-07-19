@@ -11,9 +11,9 @@ import android.widget.ListView;
 import android.widget.TabHost;
 
 import com.example.sy.myapplication.R;
+import com.example.sy.myapplication.Utils.Dialog.DRDialog;
 import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.DBUtil;
-import com.example.sy.myapplication.Utils.Dialog.DialogUtil;
 import com.example.sy.myapplication.Utils.TabHostUtil;
 import com.example.sy.myapplication.Utils.list.ArrayListUtil;
 import com.example.sy.myapplication.Utils.list.List_Item;
@@ -22,7 +22,7 @@ import com.example.sy.myapplication.Utils.swipe.SwipeDismissListViewTouchListene
 
 public class MainFragment extends Fragment{
     private ArrayListUtil ALU = new ArrayListUtil();
-    private DialogUtil dialogU = new DialogUtil();
+    private DRDialog DRD = new DRDialog();
     private TabHostUtil THU = new TabHostUtil();
 
     private ListView lv1, lv2;
@@ -91,7 +91,7 @@ public class MainFragment extends Fragment{
             List_Item item = (List_Item) parent.getItemAtPosition(position) ;
             String name = item.getTitle();
 
-            dialogU.dialog(getActivity(), name, D_lv);
+            DRD.DRDialog(getActivity(), name, D_lv);
         }
     };
 

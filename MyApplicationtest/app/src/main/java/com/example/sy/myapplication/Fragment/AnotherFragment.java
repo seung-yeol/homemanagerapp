@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.example.sy.myapplication.AdderActivity;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
-import com.example.sy.myapplication.Utils.Dialog.DialogUtil;
+import com.example.sy.myapplication.Utils.Dialog.DRDialog;
 import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.TabHostUtil;
 import com.example.sy.myapplication.Utils.list.ArrayListUtil;
@@ -25,7 +25,7 @@ public class AnotherFragment extends Fragment{
     private FloatingActionButton fab;
 
     private ArrayListUtil ALU = new ArrayListUtil();
-    private DialogUtil dialogU = new DialogUtil();
+    private DRDialog DRD = new DRDialog();
     private StatusSave stat = StatusSave.getInstance();
     private TabHostUtil THU = new TabHostUtil();
 
@@ -129,7 +129,7 @@ public class AnotherFragment extends Fragment{
             List_Item item = (List_Item) parent.getItemAtPosition(position) ;
             String s = item.getTitle();
 
-            dialogU.dialog(getActivity(),s,stat.getListView());
+            DRD.DRDialog(getActivity(),s,stat.getListView());
         }
     };
 

@@ -13,7 +13,8 @@ import android.widget.TextView;
 import com.example.sy.myapplication.Service.MyService;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.DateUtil;
-import com.example.sy.myapplication.Utils.Dialog.DialogUtil;
+import com.example.sy.myapplication.Utils.Dialog.AlertDialog;
+import com.example.sy.myapplication.Utils.Dialog.DatePickerDialog;
 import com.example.sy.myapplication.Utils.StatusBarUtil;
 import com.example.sy.myapplication.Utils.StatusSave;
 
@@ -24,8 +25,9 @@ import com.example.sy.myapplication.Utils.StatusSave;
 public class AdderActivity extends AppCompatActivity {
     private StatusSave statusSave = StatusSave.getInstance();
 
-    private DialogUtil dU = new DialogUtil();
+    private AlertDialog ALD = new AlertDialog();
     private DateUtil DateU = new DateUtil();
+    private DatePickerDialog DPD = new DatePickerDialog();
 
     private TextView date;
     private static int i;
@@ -88,19 +90,19 @@ public class AdderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(edit_name.getText().toString().equals("")){
                     //이름칸 비었을경우
-                    dU.dialog_a(AdderActivity.this,"이름칸이 비었습니다.");
+                    ALD.alertDialog(AdderActivity.this,"이름칸이 비었습니다.");
                 }
                 else if(mDBUtil.overlap_check(edit_name.getText().toString())){
                     //이름이 중복되는경우
-                    dU.dialog_a(AdderActivity.this,"중복되는 이름입니다. \n 다시 작성해주세요.");
+                    ALD.alertDialog(AdderActivity.this,"중복되는 이름입니다. \n 다시 작성해주세요.");
                 }
                 else if(date.getText().length()==0){
                     //만기일을 지정하지 않은경우
-                    dU.dialog_a(AdderActivity.this,"완료일을 지정해주세요");
+                    ALD.alertDialog(AdderActivity.this,"완료일을 지정해주세요");
                 }
                 else{
                     //다 잘된경우 db에 입력.
-                    DBinsert(mDBUtil, edit_name.getText().toString(), dU.getDate(), DateU.ToDay(), DateU.W_Date(i), memo.getText().toString());
+                    DBinsert(mDBUtil, edit_name.getText().toString(), DPD.getDate(), DateU.ToDay(), DateU.W_Date(i), memo.getText().toString());
                     Intent intent = new Intent(AdderActivity.this, MyService.class);
                     startService(intent);
                 }
@@ -118,7 +120,7 @@ public class AdderActivity extends AppCompatActivity {
 
     //타임핔ㅓ 다이얼로그 실행함수
     private void timePickerDialog(){
-        dU.DialogDatePicker(AdderActivity.this,date);
+        DPD.datePickerDialog(AdderActivity.this,date);
     }
 
     //db에 내용 저장하는 함수
