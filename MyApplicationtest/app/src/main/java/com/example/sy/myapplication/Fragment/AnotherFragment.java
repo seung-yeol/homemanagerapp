@@ -20,7 +20,8 @@ import com.example.sy.myapplication.Utils.list.List_Item;
 import com.example.sy.myapplication.Utils.swipe.SwipeDismissListViewTouchListener;
 import com.melnykov.fab.FloatingActionButton;
 
-public class RefrigeratorFragment extends Fragment{
+
+public class AnotherFragment extends Fragment{
     private FloatingActionButton fab;
 
     private ArrayListUtil ALU = new ArrayListUtil();
@@ -31,15 +32,12 @@ public class RefrigeratorFragment extends Fragment{
     private ListView lv1;
     private ListView lv2;
     private ListView lv3;
-    private ListView D_lv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-
         View root = inflater.inflate(R.layout.fragment_sub,null);
 
-        stat.setCategory(StatusSave.Category.REFRIGERATOR);
         stat.setTabGrade(StatusSave.TabGrade.URGENT);
 
         setFloatngButton(root);
@@ -50,9 +48,9 @@ public class RefrigeratorFragment extends Fragment{
         THU.set_tabhost(root,lv1,lv2,lv3);
         stat.setListView(lv1);
 
-        list_setting(lv1, StatusSave.TabGrade.URGENT);
-        list_setting(lv2, StatusSave.TabGrade.WARNING);
-        list_setting(lv3, StatusSave.TabGrade.NORMAL);
+        list_setting(lv1,StatusSave.TabGrade.URGENT);
+        list_setting(lv2,StatusSave.TabGrade.WARNING);
+        list_setting(lv3,StatusSave.TabGrade.NORMAL);
 
         return root;
     }
@@ -60,22 +58,22 @@ public class RefrigeratorFragment extends Fragment{
     public void onResume(){
         super.onResume();
 
-        list_setting(lv1, StatusSave.TabGrade.URGENT);
-        list_setting(lv2, StatusSave.TabGrade.WARNING);
-        list_setting(lv3, StatusSave.TabGrade.NORMAL);
+        list_setting(lv1,StatusSave.TabGrade.URGENT);
+        list_setting(lv2,StatusSave.TabGrade.WARNING);
+        list_setting(lv3,StatusSave.TabGrade.NORMAL);
     }
 
-    private void list_setting(final ListView lv, final StatusSave.TabGrade tabGrade){
-        if(tabGrade == StatusSave.TabGrade.URGENT){
-            ALU.li_urgent(lv, getActivity(), StatusSave.Category.REFRIGERATOR);
+    public void list_setting(final ListView lv, final StatusSave.TabGrade tabGrade){
+        if ( tabGrade == StatusSave.TabGrade.URGENT){
+            ALU.li_urgent( lv,getActivity(), stat.getCategory());
             lv.setOnItemClickListener(mItemClickListener);
         }
         else if(tabGrade == StatusSave.TabGrade.WARNING){
-            ALU.li_warning(lv, getActivity(), StatusSave.Category.REFRIGERATOR);
+            ALU.li_warning( lv,getActivity(), stat.getCategory());
             lv.setOnItemClickListener(mItemClickListener);
         }
         else{
-            ALU.li_normal(lv, getActivity(), StatusSave.Category.REFRIGERATOR);
+            ALU.li_normal(lv,getActivity(),stat.getCategory());
             lv.setOnItemClickListener(mItemClickListener);
         }
         //리스트 슬라이드시
@@ -94,45 +92,46 @@ public class RefrigeratorFragment extends Fragment{
                                     List_Item item = (List_Item)listView.getAdapter().getItem(position);
                                     String title = item.getTitle();
 
-                                    list_update( dbUtil, title, lv, tabGrade );
+                                    list_update(dbUtil, title, lv, tabGrade);
                                 }
                             }
                         });
         lv.setOnTouchListener(touchListener);
         lv.setOnScrollListener(touchListener.makeScrollListener());
     }
-    private void list_update(DBUtil dbUtil, String title, ListView lv, StatusSave.TabGrade tabGrade){
+    public void list_update(DBUtil dbUtil,String title,ListView lv, StatusSave.TabGrade tabGrade){
         dbUtil.update(title); //드래그시 자동갱신
         if(tabGrade == StatusSave.TabGrade.URGENT){
-            ALU.li_urgent(lv,getActivity(), StatusSave.Category.REFRIGERATOR);
+            ALU.li_urgent(lv,getActivity(), stat.getCategory());
         }
         else if(tabGrade == StatusSave.TabGrade.WARNING){
-            ALU.li_warning(lv,getActivity(), StatusSave.Category.REFRIGERATOR);
+            ALU.li_warning(lv,getActivity(), stat.getCategory());
         }
         else if(tabGrade == StatusSave.TabGrade.NORMAL){
-            ALU.li_normal(lv,getActivity(), StatusSave.Category.REFRIGERATOR);
+            ALU.li_normal(lv,getActivity(), stat.getCategory());
         }
     }
-    private void setFloatngButton(View root){
-        fab = (FloatingActionButton)root.findViewById(R.id.adder);
-        //fab.attachToListView(listView);
+    public void setFloatngButton(final View root){
+        FloatingActionButton fab = (FloatingActionButton)root.findViewById(R.id.adder);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AdderActivity.class);
+                Intent intent = new Intent(root.getContext(),AdderActivity.class);
                 startActivity(intent);
             }
         });
     }
 
     //리스트 터치시 다이얼로그 실행 리스너
-    private ListView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+    ListView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             List_Item item = (List_Item) parent.getItemAtPosition(position) ;
             String s = item.getTitle();
 
-            dialogU.dialog(getActivity(),s,D_lv);
+            dialogU.dialog(getActivity(),s,stat.getListView());
         }
     };
+
 }
+

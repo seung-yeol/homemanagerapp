@@ -14,12 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.sy.myapplication.Fragment.ClearupFragment;
+import com.example.sy.myapplication.Fragment.AnotherFragment;
 import com.example.sy.myapplication.Fragment.DeveloperFragment;
-import com.example.sy.myapplication.Fragment.LaundryFragment;
 import com.example.sy.myapplication.Fragment.LicenseFragment;
 import com.example.sy.myapplication.Fragment.MainFragment;
-import com.example.sy.myapplication.Fragment.RefrigeratorFragment;
 import com.example.sy.myapplication.Service.MyService;
 import com.example.sy.myapplication.Utils.StatusSave;
 
@@ -95,11 +93,11 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.laundry) {
-            frag_select(new LaundryFragment(),"빨래",StatusSave.Category.LAUNDRY);
+            frag_select(new AnotherFragment(),"빨래",StatusSave.Category.LAUNDRY);
         } else if (id == R.id.refrigerator) {
-            frag_select(new RefrigeratorFragment(),"냉장고",StatusSave.Category.REFRIGERATOR);
+            frag_select(new AnotherFragment(),"냉장고",StatusSave.Category.REFRIGERATOR);
         } else if (id == R.id.clear_up) {
-            frag_select(new ClearupFragment(),"청소",StatusSave.Category.CLEARUP);
+            frag_select(new AnotherFragment(),"청소",StatusSave.Category.CLEARUP);
         } else if (id == R.id.nav_developer) {
             frag_select(new DeveloperFragment(),"개발자",StatusSave.Category.DEVELOPER);
         } else if (id == R.id.nav_license) {
@@ -114,7 +112,7 @@ public class NavigationActivity extends AppCompatActivity
 
     public void frag_select(Fragment frag, String AcBarStr ,StatusSave.Category Category){
         statusSave.setCategory(Category);
-        setFragment( frag , AcBarStr);
+        setFragment(frag , AcBarStr);
     }
 
     public void setFragment(Fragment Frag, String AcBarStr){
