@@ -53,7 +53,7 @@ public enum StatusSave {
 
     public enum Category {
         CLEARUP( 1, "ex)대청소" ), LAUNDRY( 2, "ex)이불빨래"), REFRIGERATOR( 3, "ex)우유"),
-        MAIN(4), DEVELOPER(5), LICENSE(6);
+        MAIN(4), ETC(5,"ex) 치과치료"), FACILITIES(6), TRASH(7), DEVELOPER(8), LICENSE(9), ;
 
         Category(int num, String hint){
             this.num = num;

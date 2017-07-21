@@ -17,7 +17,24 @@
             android:id="@+id/refrigerator"
             android:icon="@mipmap/ic_refrigerator"
             android:title="냉장고" />
+        <item
+            android:id="@+id/etc"
+            android:icon="@mipmap/ic_etc"
+            android:title="기타" />
     </group>
+
+    <item android:title="INFOMATION">
+        <menu>
+            <item
+                android:id="@+id/facilities"
+                android:icon="@mipmap/ic_me"
+                android:title="편의시설" />
+            <item
+                android:id="@+id/trash"
+                android:icon="@mipmap/ic_trash"
+                android:title="쓰레기 배출" />
+        </menu>
+    </item>
 
     <item android:title="ETC">
         <menu>

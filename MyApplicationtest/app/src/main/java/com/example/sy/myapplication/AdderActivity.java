@@ -42,7 +42,7 @@ public class AdderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.adder);
+        setContentView(R.layout.activity_adder);
         i=7;//싴바 움직이지않으면 기본값 7
 
         StatusBarUtil SBU = new StatusBarUtil();

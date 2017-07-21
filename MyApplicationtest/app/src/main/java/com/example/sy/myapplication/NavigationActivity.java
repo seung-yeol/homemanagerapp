@@ -98,10 +98,16 @@ public class NavigationActivity extends AppCompatActivity
             frag_select(new AnotherFragment(),"냉장고",StatusSave.Category.REFRIGERATOR);
         } else if (id == R.id.clear_up) {
             frag_select(new AnotherFragment(),"청소",StatusSave.Category.CLEARUP);
+        } else if (id == R.id.etc) {
+            frag_select(new AnotherFragment(),"기타",StatusSave.Category.ETC);
+        } else if (id == R.id.facilities) {
+            frag_select(new AnotherFragment(),"편의시설",StatusSave.Category.FACILITIES);
+        } else if (id == R.id.trash) {
+            frag_select(new AnotherFragment(),"쓰레기배출",StatusSave.Category.TRASH);
         } else if (id == R.id.nav_developer) {
             frag_select(new DeveloperFragment(),"개발자",StatusSave.Category.DEVELOPER);
         } else if (id == R.id.nav_license) {
-            frag_select(new LicenseFragment(),"오픈소스 라이센스",StatusSave.Category.LAUNDRY);
+            frag_select(new LicenseFragment(),"오픈소스 라이센스",StatusSave.Category.LICENSE);
         } else if (id == R.id.main_go) {
             frag_select(new MainFragment(),"집안꼴이 이게뭐니",StatusSave.Category.DEVELOPER);
         }

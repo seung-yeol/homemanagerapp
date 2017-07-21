@@ -221,7 +221,7 @@ public class DBUtil extends SQLiteOpenHelper {
         return result;
     }
     //리스트의 개수 가져오는 함수
-    public int getTypeCount(int tab){
+    public int getTypeCount(StatusSave.TabGrade tabGrade){
         DateUtil DateU = new DateUtil();
         SQLiteDatabase db = getWritableDatabase();
 
@@ -229,7 +229,7 @@ public class DBUtil extends SQLiteOpenHelper {
         int Today_int = Integer.parseInt(Today);
 
         int i = 0;
-        if(tab == 1){
+        if(tabGrade == StatusSave.TabGrade.URGENT){
             //시급 리스트 쭉뽑아
             Cursor result = db.rawQuery("select NAME from HOMEMANAGER where EXPIRY_DATE <= "+Today_int, null);
             while (result.moveToNext()) {

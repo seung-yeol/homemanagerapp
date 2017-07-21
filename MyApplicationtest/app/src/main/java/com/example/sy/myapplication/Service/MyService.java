@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import com.example.sy.myapplication.NavigationActivity;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
+import com.example.sy.myapplication.Utils.StatusSave;
 
 public class MyService extends Service {
     @Override
@@ -42,8 +43,8 @@ public class MyService extends Service {
                 R.layout.notification);
 
         DBUtil mDBUtil = new DBUtil(this, "HomeManager.db", null, 1);
-        int sadCount = mDBUtil.getTypeCount(1);
-        int sosoCount = mDBUtil.getTypeCount(2);
+        int sadCount = mDBUtil.getTypeCount(StatusSave.TabGrade.URGENT);
+        int sosoCount = mDBUtil.getTypeCount(StatusSave.TabGrade.WARNING);
         //<b>의 속성이 적용되도록 CharSequencs 이용
         CharSequence s = getText(R.string.noti_title);
 
