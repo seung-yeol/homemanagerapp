@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
 import com.example.sy.myapplication.AdderActivity;
+import com.example.sy.myapplication.NavigationActivity;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DRDialog;
@@ -20,7 +22,9 @@ import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.list.ArrayListUtil;
 import com.example.sy.myapplication.Utils.list.List_Item;
 import com.example.sy.myapplication.Utils.swipe.SwipeDismissListViewTouchListener;
-import com.melnykov.fab.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 
 public class AnotherFragment extends Fragment implements TabHost.OnTabChangeListener{
@@ -30,12 +34,23 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
     private DRDialog DRD = new DRDialog();
     private StatusSave stat = StatusSave.getInstance();
 
+    public FloatingActionButton actionButton;
+    private SubActionButton button1, button2;
+    private FloatingActionMenu actionMenu;
+
+
+    private static AnotherFragment INSTANCE;
+
     final static String s_urgent = "제발";
     final static String s_warning = "주의";
     final static String s_normal = "괜춘";
 
     private Drawable face_1, face_2, face_3;
     private ListView lv1, lv2, lv3;
+
+    public AnotherFragment(){
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +64,7 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
         TabHost host = (TabHost)root.findViewById(R.id.tabHost);
         host.setup();
 
-        setFloatngButton(root);
+        setFloatingButton(root);
 
         face_1 = getResources().getDrawable(R.drawable.ic_sad_selector);
         face_2 = getResources().getDrawable(R.drawable.ic_soso_selector);
@@ -67,6 +82,7 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
 
         return root;
     }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -74,18 +90,35 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
         list_setting(lv1,StatusSave.TabGrade.URGENT);
         list_setting(lv2,StatusSave.TabGrade.WARNING);
         list_setting(lv3,StatusSave.TabGrade.NORMAL);
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        actionButton.setVisibility(View.GONE);
+    }
+    public static AnotherFragment getINSTANCE(){
+        if (INSTANCE == null){
+            INSTANCE = new AnotherFragment();
+        }
+        return  INSTANCE;
     }
 
     public void list_setting(final ListView lv, final StatusSave.TabGrade tabGrade){
 
         Log.e("셋팅중", "list_setting: " + tabGrade, null );
-        if ( tabGrade == StatusSave.TabGrade.URGENT)
+        if ( tabGrade == StatusSave.TabGrade.URGENT){
             ALU.li_urgent( lv,getActivity(), stat.getCategory());
-        else if(tabGrade == StatusSave.TabGrade.WARNING)
+            lv.setOnItemClickListener(mItemClickListener);}
+        else if(tabGrade == StatusSave.TabGrade.WARNING){
             ALU.li_warning( lv,getActivity(), stat.getCategory());
-        else
-            ALU.li_normal(lv,getActivity(),stat.getCategory());
-        lv.setOnItemClickListener(mItemClickListener);
+             lv.setOnItemClickListener(mItemClickListener);
+        }
+        else {
+            ALU.li_normal(lv, getActivity(), stat.getCategory());
+            lv.setOnItemClickListener(mItemClickListener);
+        }
         //리스트 슬라이드시
         SwipeDismissListViewTouchListener touchListener =
                 new SwipeDismissListViewTouchListener(lv,
@@ -121,27 +154,6 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
             ALU.li_normal(lv,getActivity(), stat.getCategory());
         }
     }
-    public void setFloatngButton(final View root){
-        FloatingActionButton fab = (FloatingActionButton)root.findViewById(R.id.adder);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(root.getContext(),AdderActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    //리스트 터치시 다이얼로그 실행 리스너
-    ListView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            List_Item item = (List_Item) parent.getItemAtPosition(position) ;
-            String s = item.getTitle();
-
-            DRD.DRDialog(getActivity(),s,stat.getListView());
-        }
-    };
 
     public void setTabHost( View root ){
         TabHost host = (TabHost)root.findViewById(R.id.tabHost);
@@ -180,5 +192,49 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
                 ALU.li_urgent(lv3,getActivity(), stat.getCategory());
                 break;
         }
+    }
+
+    ListView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            List_Item item = (List_Item) parent.getItemAtPosition(position) ;
+            String s = item.getTitle();
+
+            DRD.DRDialog(getActivity(),s,stat.getListView());
+        }
+    };
+
+    public void setFloatingButton(final View root){
+        ImageView icon = new ImageView(root.getContext()); // Create an icon
+        icon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_more));
+
+        actionButton = new FloatingActionButton.Builder(root.getContext())
+                .setContentView(icon)
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(root.getContext());
+        // repeat many times:
+        ImageView itemIcon = new ImageView(root.getContext());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_add));
+        button1 = itemBuilder.setContentView(itemIcon).build();
+
+        ImageView itemIcon1 = new ImageView(root.getContext());
+        itemIcon1.setImageDrawable(getResources().getDrawable(R.mipmap.ic_moretip));
+        button2 = itemBuilder.setContentView(itemIcon1).build();
+
+
+        actionMenu = new FloatingActionMenu.Builder(root.getContext())
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .attachTo(actionButton)
+                .build();
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(root.getContext(),AdderActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

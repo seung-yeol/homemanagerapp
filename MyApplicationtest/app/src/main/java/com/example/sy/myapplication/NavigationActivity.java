@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.sy.myapplication.Fragment.AnotherFragment;
 import com.example.sy.myapplication.Fragment.DeveloperFragment;
@@ -22,7 +23,7 @@ import com.example.sy.myapplication.Service.MyService;
 import com.example.sy.myapplication.Utils.StatusSave;
 
 public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener {
 
     FragmentManager FragM = getFragmentManager();
     FragmentTransaction transaction = FragM.beginTransaction();
@@ -46,7 +47,7 @@ public class NavigationActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -121,5 +122,25 @@ public class NavigationActivity extends AppCompatActivity
 
         transaction.replace(R.id.frag, frag);
         transaction.commit();
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset){
+        AnotherFragment.getINSTANCE().actionButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
     }
 }

@@ -18,7 +18,7 @@ public class LoadingActivity extends AppCompatActivity {
         SBU.setStatusBarColor(this, getResources().getColor(R.color.colorPrimaryDark));
 
         Handler hd = new Handler();
-        hd.postDelayed(new splashhandler() , 3000); // 3초 후에 hd Handler 실행
+        hd.postDelayed(new splashhandler() , 10); // 3초 후에 hd Handler 실행
     }
 
     private class splashhandler implements Runnable{
