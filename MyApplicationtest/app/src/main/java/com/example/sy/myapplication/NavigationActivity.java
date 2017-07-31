@@ -93,11 +93,11 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.laundry) {
-            frag_select(new AnotherFragment(),"빨래",StatusSave.Category.LAUNDRY);
+            frag_select(AnotherFragment.getINSTANCE(),"빨래",StatusSave.Category.LAUNDRY);
         } else if (id == R.id.refrigerator) {
-            frag_select(new AnotherFragment(),"냉장고",StatusSave.Category.REFRIGERATOR);
+            frag_select(AnotherFragment.getINSTANCE(),"냉장고",StatusSave.Category.REFRIGERATOR);
         } else if (id == R.id.clear_up) {
-            frag_select(new AnotherFragment(),"청소",StatusSave.Category.CLEARUP);
+            frag_select(AnotherFragment.getINSTANCE(),"청소",StatusSave.Category.CLEARUP);
         } else if (id == R.id.nav_developer) {
             frag_select(new DeveloperFragment(),"개발자",StatusSave.Category.DEVELOPER);
         } else if (id == R.id.nav_license) {

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.sy.myapplication.AdderActivity;
@@ -18,11 +19,14 @@ import com.example.sy.myapplication.Utils.TabHostUtil;
 import com.example.sy.myapplication.Utils.list.ArrayListUtil;
 import com.example.sy.myapplication.Utils.list.List_Item;
 import com.example.sy.myapplication.Utils.swipe.SwipeDismissListViewTouchListener;
-import com.melnykov.fab.FloatingActionButton;
-
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 public class AnotherFragment extends Fragment{
-    private FloatingActionButton fab;
+    private FloatingActionButton actionButton;
+    private SubActionButton button1;
+    private FloatingActionMenu actionMenu;
 
     private ArrayListUtil ALU = new ArrayListUtil();
     private DRDialog DRD = new DRDialog();
@@ -33,6 +37,26 @@ public class AnotherFragment extends Fragment{
     private ListView lv2;
     private ListView lv3;
 
+    private static AnotherFragment INSTANCE;
+
+    //쓰지마 씨붕
+    public AnotherFragment(){
+
+    }
+
+    public static AnotherFragment getINSTANCE(){
+        if (INSTANCE == null){
+            INSTANCE = new AnotherFragment();
+        }
+        return  INSTANCE;
+    }
+
+    @Override
+    public void onDetach() {
+        detachFloatingButton();
+        super.onDetach();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -40,7 +64,7 @@ public class AnotherFragment extends Fragment{
 
         stat.setTabGrade(StatusSave.TabGrade.URGENT);
 
-        setFloatngButton(root);
+        setFloatingButton(root);
 
         lv1 = (ListView)root.findViewById(R.id.list3);
         lv2 = (ListView)root.findViewById(R.id.list4);
@@ -111,7 +135,9 @@ public class AnotherFragment extends Fragment{
             ALU.li_normal(lv,getActivity(), stat.getCategory());
         }
     }
-    public void setFloatngButton(final View root){
+
+/*
+    public void setFloatingButton(final View root){
         FloatingActionButton fab = (FloatingActionButton)root.findViewById(R.id.adder);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +146,41 @@ public class AnotherFragment extends Fragment{
                 startActivity(intent);
             }
         });
+    }
+*/
+
+    public void setFloatingButton(final View root){
+        ImageView icon = new ImageView(root.getContext()); // Create an icon
+        icon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_me));
+
+        actionButton = new FloatingActionButton.Builder(getActivity())
+                .setContentView(icon)
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+// repeat many times:
+        ImageView itemIcon = new ImageView(root.getContext());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_me));
+        button1 = itemBuilder.setContentView(itemIcon).build();
+
+
+        actionMenu = new FloatingActionMenu.Builder(getActivity())
+                .addSubActionView(button1)
+                // ...
+                .attachTo(actionButton)
+                .build();
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(root.getContext(),AdderActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    public void detachFloatingButton(){
+        actionButton.detach();
+        actionMenu.close(true);
     }
 
     //리스트 터치시 다이얼로그 실행 리스너
