@@ -11,22 +11,27 @@ import android.widget.ListView;
 import android.widget.TabHost;
 
 import com.example.sy.myapplication.R;
+import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DRDialog;
 import com.example.sy.myapplication.Utils.StatusSave;
-import com.example.sy.myapplication.Utils.DBUtil;
-import com.example.sy.myapplication.Utils.TabHostUtil;
 import com.example.sy.myapplication.Utils.list.ArrayListUtil;
 import com.example.sy.myapplication.Utils.list.List_Item;
 import com.example.sy.myapplication.Utils.swipe.SwipeDismissListViewTouchListener;
 
 
-public class MainFragment extends Fragment{
+public class MainFragment extends Fragment implements TabHost.OnTabChangeListener{
     private ArrayListUtil ALU = new ArrayListUtil();
     private DRDialog DRD = new DRDialog();
-    private TabHostUtil THU = new TabHostUtil();
+    private StatusSave stat = StatusSave.getInstance();
 
     private ListView lv1, lv2;
     private static ListView D_lv ;
+
+    final static String s_urgent = "제발";
+    final static String s_warning = "주의";
+    final static String s_normal = "괜춘";
+
+    private Drawable face_1, face_2;
 
     private StatusSave statusSave = StatusSave.getInstance();
 
@@ -36,19 +41,21 @@ public class MainFragment extends Fragment{
 
         View root = inflater.inflate(R.layout.fragment_main,null);
 
-
         statusSave.setCategory(StatusSave.Category.MAIN);
         statusSave.setTabGrade(StatusSave.TabGrade.URGENT);
 
         TabHost host = (TabHost)root.findViewById(R.id.tabHost);
         host.setup();
 
-        Drawable i1 = getResources().getDrawable(R.drawable.ic_sad_selector);
-        Drawable i2 = getResources().getDrawable(R.drawable.ic_soso_selector);
-        Drawable i3 = getResources().getDrawable(R.drawable.ic_smile_selector);
-        THU.setface(i1,i2,i3);
+        face_1 = getResources().getDrawable(R.drawable.ic_sad_selector);
+        face_2 = getResources().getDrawable(R.drawable.ic_soso_selector);
 
-        //Tab 1
+        lv1 = (ListView)root.findViewById(R.id.list3);
+        lv2 = (ListView)root.findViewById(R.id.list4);
+
+        setTabHost( root );
+
+        /*//Tab 1
         TabHost.TabSpec spec = host.newTabSpec("제발");
         spec.setContent( R.id.tab1 );
         spec.setIndicator("",i1);
@@ -57,7 +64,7 @@ public class MainFragment extends Fragment{
         spec = host.newTabSpec("주의");
         spec.setContent( R.id.tab2 );
         spec.setIndicator("",i2);
-        host.addTab(spec);
+        host.addTab(spec);*/
 
         lv1 = (ListView)root.findViewById(R.id.list1);
         lv2 = (ListView)root.findViewById(R.id.list2);
@@ -65,22 +72,6 @@ public class MainFragment extends Fragment{
 
         list_setting(lv1, StatusSave.TabGrade.URGENT);
         list_setting(lv2, StatusSave.TabGrade.WARNING);
-
-        host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String s) {
-                switch (s){
-                    case "제발":
-                        statusSave.setTabGrade(StatusSave.TabGrade.URGENT);
-                        D_lv = lv1;
-                        break;
-                    case "주의":
-                        statusSave.setTabGrade(StatusSave.TabGrade.WARNING);
-                        D_lv = lv2;
-                        break;
-                }
-            }
-        });
 
         return root;
     }
@@ -136,27 +127,7 @@ public class MainFragment extends Fragment{
             ALU.li_warning(lv,getActivity(), StatusSave.Category.MAIN);
         }
     }
-    /*
-    //윈도우의 포커스가 변경이 되는경우 중 db의 내용이 바뀌는 경우가 많아서 리스트 재생성.
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
 
-        if (hasFocus == true) {
-            ALU.li_normal(lv,this,type);
-        } else {
-            ALU.li_normal(lv,this,type);
-        }
-    }
-    //백버튼 누를시
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        switch (keyCode){
-            case KeyEvent.KEYCODE_BACK :
-                Intent intent = new Intent(getActivity(), NavigationActivity.class);
-                startActivity(intent);
-        }
-        return super.onKeyDown(keyCode, event);
-    }*/
     //정지될시 리스트 재생성, db의 내용이 바뀔 수도 있어서
     @Override
     public void onResume(){
@@ -164,5 +135,37 @@ public class MainFragment extends Fragment{
         list_setting(lv1,StatusSave.TabGrade.URGENT);
         list_setting(lv2,StatusSave.TabGrade.WARNING);
     }
-}
 
+    public void setTabHost( View root ){
+        TabHost host = (TabHost)root.findViewById(R.id.tabHost);
+
+        setTabWiget(host, face_1, R.id.tab1, s_urgent);
+        setTabWiget(host, face_2, R.id.tab2, s_warning);
+
+        host.setOnTabChangedListener(this);
+        host.setup();
+    }
+
+    public void setTabWiget(TabHost host, Drawable draw, int i, String s){
+        TabHost.TabSpec spec = host.newTabSpec(s);
+        spec.setContent(i);
+        spec.setIndicator("",draw);
+        host.addTab(spec);
+    }
+
+    @Override
+    public void onTabChanged(String tabId) {
+        switch (tabId){
+            case "제발":
+                stat.setTabGrade(StatusSave.TabGrade.URGENT);
+                stat.setListView(lv1);
+                ALU.li_urgent(lv1,getActivity(), stat.getCategory());
+                break;
+            case "주의":
+                stat.setTabGrade(StatusSave.TabGrade.WARNING);
+                stat.setListView(lv2);
+                ALU.li_urgent(lv2,getActivity(), stat.getCategory());
+                break;
+        }
+    }
+}

@@ -92,36 +92,34 @@ public class NavigationActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.laundry) {
-            frag_select(new AnotherFragment(),"빨래",StatusSave.Category.LAUNDRY);
-        } else if (id == R.id.refrigerator) {
-            frag_select(new AnotherFragment(),"냉장고",StatusSave.Category.REFRIGERATOR);
-        } else if (id == R.id.clear_up) {
-            frag_select(new AnotherFragment(),"청소",StatusSave.Category.CLEARUP);
-        } else if (id == R.id.nav_developer) {
-            frag_select(new DeveloperFragment(),"개발자",StatusSave.Category.DEVELOPER);
-        } else if (id == R.id.nav_license) {
-            frag_select(new LicenseFragment(),"오픈소스 라이센스",StatusSave.Category.LAUNDRY);
-        } else if (id == R.id.main_go) {
-            frag_select(new MainFragment(),"집안꼴이 이게뭐니",StatusSave.Category.DEVELOPER);
-        }
+
+        if (id == R.id.laundry)
+            fragmentSelect(new AnotherFragment(),"빨래",StatusSave.Category.LAUNDRY);
+        else if (id == R.id.refrigerator)
+            fragmentSelect(new AnotherFragment(),"냉장고",StatusSave.Category.REFRIGERATOR);
+        else if (id == R.id.clear_up)
+            fragmentSelect(new AnotherFragment(),"청소",StatusSave.Category.CLEARUP);
+        else if (id == R.id.nav_developer)
+            fragmentSelect(new DeveloperFragment(),"개발자",StatusSave.Category.DEVELOPER);
+        else if (id == R.id.nav_license)
+            fragmentSelect(new LicenseFragment(),"오픈소스 라이센스",StatusSave.Category.LAUNDRY);
+        else if (id == R.id.main_go)
+            fragmentSelect(new MainFragment(),"집안꼴이 이게뭐니",StatusSave.Category.DEVELOPER);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void frag_select(Fragment frag, String AcBarStr ,StatusSave.Category Category){
-        statusSave.setCategory(Category);
-        setFragment(frag , AcBarStr);
-    }
+    public void fragmentSelect(Fragment frag, String AcBarStr , StatusSave.Category category){
+        statusSave.setCategory(category);
 
-    public void setFragment(Fragment Frag, String AcBarStr){
         FragmentManager FragM = getFragmentManager();
         FragmentTransaction transaction = FragM.beginTransaction();
 
         getSupportActionBar().setTitle(AcBarStr);
 
-        transaction.replace(R.id.frag,Frag);
+        transaction.replace(R.id.frag, frag);
         transaction.commit();
     }
 }
