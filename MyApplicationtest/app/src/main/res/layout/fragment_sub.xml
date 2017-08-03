@@ -17,56 +17,58 @@
             android:orientation="vertical">
 
             <TabWidget
-                android:layout_alignParentTop="true"
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </TabWidget>
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"></TabWidget>
 
             <FrameLayout
-                android:layout_below="@android:id/tabs"
-                android:layout_alignParentBottom="true"
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@android:id/tabs"
                 android:background="@drawable/custom_list_bg">
 
                 <LinearLayout
+                    style="@style/ListStyle"
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="8dp"
                     android:orientation="vertical">
-                    <ListView
+
+                    <com.baoyz.swipemenulistview.SwipeMenuListView
+                        android:id="@+id/list3"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/list3"/>
+                        android:layout_height="match_parent" />
                 </LinearLayout>
 
                 <LinearLayout
+                    style="@style/ListStyle"
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/custom_list_bg"
-                    android:padding="8dp"
                     android:orientation="vertical">
-                    <ListView
+
+                    <com.baoyz.swipemenulistview.SwipeMenuListView
+                        android:id="@+id/list4"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/list4"/>
+                        android:layout_height="match_parent" />
                 </LinearLayout>
 
                 <LinearLayout
+                    style="@style/ListStyle"
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/custom_list_bg"
-                    android:padding="8dp"
                     android:orientation="vertical">
-                    <ListView
+
+                    <com.baoyz.swipemenulistview.SwipeMenuListView
+                        android:id="@+id/list5"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/list5"/>
+                        android:layout_height="match_parent" />
                 </LinearLayout>
 
                 <com.melnykov.fab.FloatingActionButton

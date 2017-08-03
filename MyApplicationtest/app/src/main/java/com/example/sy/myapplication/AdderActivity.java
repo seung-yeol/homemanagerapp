@@ -48,7 +48,7 @@ public class AdderActivity extends AppCompatActivity {
         StatusBarUtil SBU = new StatusBarUtil();
         SBU.setStatusBarColor(this, getResources().getColor(R.color.colorPrimaryDark));
 
-        final DBUtil mDBUtil = new DBUtil(getApplicationContext(), "HomeManager.db", null, 1);
+        final DBUtil mDBUtil = DBUtil.getInstance();
         final TextView warning = (TextView)findViewById(R.id.seekbar_text);
         //싴바ㅏㅏ  변경 시 경고기간의 변경 및 텍스트 자동변경.
         SeekBar seekBar2 = (SeekBar) findViewById(R.id.seekBar);
@@ -102,7 +102,7 @@ public class AdderActivity extends AppCompatActivity {
                 }
                 else{
                     //다 잘된경우 db에 입력.
-                    DBinsert(mDBUtil, edit_name.getText().toString(), DPD.getDate(), DateU.ToDay(), DateU.W_Date(i), memo.getText().toString());
+                    DBInsert(mDBUtil, edit_name.getText().toString(), DPD.getDate(), DateU.ToDay(), DateU.W_Date(i), memo.getText().toString());
                     Intent intent = new Intent(AdderActivity.this, MyService.class);
                     startService(intent);
                 }
@@ -124,8 +124,8 @@ public class AdderActivity extends AppCompatActivity {
     }
 
     //db에 내용 저장하는 함수
-    private void DBinsert(DBUtil mDBUtil, String name, String exripy_date, String today, String warning, String memo){
-        mDBUtil.insertData(name, exripy_date , today, warning, memo, statusSave.getCategory().getNum());
+    private void DBInsert(DBUtil mDBUtil, String name, String urgent, String today, String warning, String memo){
+        mDBUtil.insertData(name, urgent , warning, today, memo, statusSave.getCategory().getNum());
         finish();
     }
 }

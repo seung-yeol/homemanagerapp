@@ -41,7 +41,7 @@ public class MyService extends Service {
         RemoteViews RV = new RemoteViews(getPackageName(),
                 R.layout.notification);
 
-        DBUtil mDBUtil = new DBUtil(this, "HomeManager.db", null, 1);
+        DBUtil mDBUtil = DBUtil.getInstance(this, "HomeManager.db", null, 1);
         int sadCount = mDBUtil.getTypeCount(1);
         int sosoCount = mDBUtil.getTypeCount(2);
         //<b>의 속성이 적용되도록 CharSequencs 이용

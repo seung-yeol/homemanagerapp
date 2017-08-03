@@ -61,6 +61,7 @@ public class NavigationActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            //DBUtil.getInstance().dataBaseClose();
             super.onBackPressed();
         }
     }
@@ -94,17 +95,17 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.laundry)
-            fragmentSelect(new AnotherFragment(),"빨래",StatusSave.Category.LAUNDRY);
+            fragmentSelect(AnotherFragment.newInstance(),"빨래",StatusSave.Category.LAUNDRY);
         else if (id == R.id.refrigerator)
-            fragmentSelect(new AnotherFragment(),"냉장고",StatusSave.Category.REFRIGERATOR);
+            fragmentSelect(AnotherFragment.newInstance(),"냉장고",StatusSave.Category.REFRIGERATOR);
         else if (id == R.id.clear_up)
-            fragmentSelect(new AnotherFragment(),"청소",StatusSave.Category.CLEARUP);
+            fragmentSelect(AnotherFragment.newInstance(),"청소",StatusSave.Category.CLEARUP);
         else if (id == R.id.nav_developer)
             fragmentSelect(new DeveloperFragment(),"개발자",StatusSave.Category.DEVELOPER);
         else if (id == R.id.nav_license)
             fragmentSelect(new LicenseFragment(),"오픈소스 라이센스",StatusSave.Category.LAUNDRY);
         else if (id == R.id.main_go)
-            fragmentSelect(new MainFragment(),"집안꼴이 이게뭐니",StatusSave.Category.DEVELOPER);
+            fragmentSelect(new MainFragment(),"집안꼴이 이게뭐니",StatusSave.Category.MAIN);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

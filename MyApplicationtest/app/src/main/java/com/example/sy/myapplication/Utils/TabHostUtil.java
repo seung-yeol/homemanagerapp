@@ -3,10 +3,7 @@ package com.example.sy.myapplication.Utils;
 import android.graphics.drawable.Drawable;
 import android.widget.ListView;
 
-import com.example.sy.myapplication.Utils.list.ArrayListUtil;
-
 public class TabHostUtil {
-    private ArrayListUtil ALU;
     private StatusSave stat;
 
     final static String s_urgent = "제발";
@@ -20,7 +17,7 @@ public class TabHostUtil {
 
     public TabHostUtil(final ListView lv1, final ListView lv2, final ListView lv3){
 
-        ALU = new ArrayListUtil();
+        //ALU = new ListSet();
         stat = StatusSave.getInstance();
 
     }

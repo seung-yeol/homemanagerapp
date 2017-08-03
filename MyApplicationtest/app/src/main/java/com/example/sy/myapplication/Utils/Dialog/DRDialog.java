@@ -12,11 +12,10 @@ import android.widget.TextView;
 import com.example.sy.myapplication.Service.MyService;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.StatusSave;
-import com.example.sy.myapplication.Utils.list.ArrayListUtil;
 
 
 public class DRDialog {
-    private ArrayListUtil ALU = new ArrayListUtil();
+    //private ListSet ALU = new ListSet();
 
     private StatusSave statusSave = StatusSave.getInstance();
 
@@ -26,8 +25,8 @@ public class DRDialog {
     public void DRDialog(final Context context, final String name, final ListView lv){
         builder = new AlertDialog.Builder(context);
 
-        final DBUtil dbUtil = new DBUtil(context, "HomeManager.db", null, 1);
-        final String dbs = dbUtil.getData(name);
+        final DBUtil dbUtil = DBUtil.getInstance();
+        final String dbs = dbUtil.getDate(name);
 
         TextView title = new TextView(context);
         title.setText(name + " 메모 ");
@@ -47,13 +46,13 @@ public class DRDialog {
                             public void onClick(DialogInterface dialog, int whichButton){
                                 dbUtil.delete(name);
                                 if (statusSave.getTabGrade() == StatusSave.TabGrade.URGENT){
-                                    ALU.li_urgent(lv,context, statusSave.getCategory());
+                                    //ALU.listSet(lv,context, statusSave.getCategory());
                                 }
                                 else if(statusSave.getTabGrade() == StatusSave.TabGrade.WARNING){
-                                    ALU.li_warning(lv,context, statusSave.getCategory());
+                                    //ALU.li_warning(lv,context, statusSave.getCategory());
                                 }
                                 else{
-                                    ALU.li_normal(lv,context, statusSave.getCategory());
+                                    //ALU.li_normal(lv,context, statusSave.getCategory());
                                 }
                                 Intent intent = new Intent(context, MyService.class);
                                 context.startService(intent);
@@ -69,13 +68,13 @@ public class DRDialog {
                             dbUtil.update(name);
 
                             if (statusSave.getTabGrade() == StatusSave.TabGrade.URGENT){
-                                ALU.li_urgent(lv, context, statusSave.getCategory());
+                                //ALU.listSet(lv, context, statusSave.getCategory());
                             }
                             else if(statusSave.getTabGrade() == StatusSave.TabGrade.WARNING){
-                                ALU.li_warning(lv, context, statusSave.getCategory());
+                                //ALU.li_warning(lv, context, statusSave.getCategory());
                             }
                             else{
-                                ALU.li_normal(lv, context, statusSave.getCategory());
+                                //ALU.li_normal(lv, context, statusSave.getCategory());
                             }
 
                             Intent intent = new Intent(context, MyService.class);
