@@ -1,43 +1,73 @@
 package com.example.sy.myapplication.Utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.BaseSwipListAdapter;
 import com.example.sy.myapplication.R;
-import com.example.sy.myapplication.Utils.Dialog.DRDialog;
+import com.example.sy.myapplication.Service.MyService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Osy on 2017-08-01.
  */
 public class MyAdapter extends BaseSwipListAdapter {
-    private List<String> MyData;
+    private ArrayList<MyData> mMyData;
+    private ArrayList<String> mDataTitle;
     private Context context;
-    private DRDialog DRD;
 
-    public MyAdapter(Context context, ArrayList< String > MyData){
+    private StatusSave.TabGrade tabGrade;
+
+    public MyAdapter(Context context){
         this.context = context;
-        this.MyData = MyData;
-        DRD = new DRDialog();
     }
 
-    public void listRefresh(ArrayList< String > MyData){
-        this.MyData = MyData;
+    public void setTabGrade(int i){
+        for (StatusSave.TabGrade tabGrade : StatusSave.TabGrade.values()) {
+            if (tabGrade.getNum() == i){
+                this.tabGrade = tabGrade;
+                break;
+            }
+        }
+    }
+    public void setTabGrade(StatusSave.TabGrade tabGrade){
+        this.tabGrade = tabGrade;
+    }
+
+    public void dataRefresh(){
+        mMyData = new ArrayList<>();
+
+        mDataTitle = DBUtil.getInstance().getTypeData(tabGrade);
+        for (int i = 0 ; i < mDataTitle.size() ; i++ ){
+            mMyData.add(new MyData(mDataTitle.get(i)));
+        }
+
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        // menu type 수 >> 냉장고는 스와잎하면 삭제만 뜨고 나머지는 갱신도 뜸
+        // 5한 이유는 타입카운트가 5이면 0 ~ 4 이니까 > 카테고리에서 기타까지의 getNum이 1~4
+        return 5;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return mMyData.get(position).getCategory().getNum();
     }
 
     @Override
     public int getCount() {
-        return MyData.size();
+        return mMyData.size();
     }
 
     @Override
-    public String getItem(int position) {
-        return MyData.get(position);
+    public MyData getItem(int position) {
+        return mMyData.get(position);
     }
 
     @Override
@@ -53,23 +83,39 @@ public class MyAdapter extends BaseSwipListAdapter {
             new ViewHolder(convertView);
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
-        final String item = getItem(position);
+        final String item = getTitle(position);
         holder.tv_name.setText(item);
 
-        /*holder.tv_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DRD.DRDialog( context , item, StatusSave.getInstance().getListView() );
-            }
-        });
-        holder.tv_name.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                return false;
-            }
-        });*/
-
         return convertView;
+    }
+
+    public String getTitle(int position){
+        return mMyData.get(position).getTitle();
+    }
+
+    public String getMemo(int position){
+        return mMyData.get(position).getMemo();
+    }
+
+    public void removeItem(int position){
+        DBUtil.getInstance().delete(mMyData.get(position).getTitle());
+        mMyData.remove(position);
+        dataRefresh();
+        notifyDataSetChanged();
+        serviceStart();
+    }
+
+    public void updateItem(int position){
+        DBUtil.getInstance().update(mMyData.get(position).getTitle());
+        mMyData.remove(position);
+        dataRefresh();
+        notifyDataSetChanged();
+        serviceStart();
+    }
+
+    public void serviceStart(){
+        Intent intent = new Intent(context, MyService.class);
+        context.startService(intent);
     }
 
     class ViewHolder {
@@ -87,10 +133,6 @@ public class MyAdapter extends BaseSwipListAdapter {
         }
         return true;
     }
-
-
-
-
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {

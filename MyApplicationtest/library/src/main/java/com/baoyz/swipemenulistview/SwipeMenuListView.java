@@ -1,7 +1,6 @@
 package com.baoyz.swipemenulistview;
 
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -254,6 +253,10 @@ public class SwipeMenuListView extends ListView {
                 break;
         }
         return super.onTouchEvent(ev);
+    }
+
+    public void closeMenu(){
+        mTouchView.closeMenu();
     }
 
     public void smoothOpenMenu(int position) {

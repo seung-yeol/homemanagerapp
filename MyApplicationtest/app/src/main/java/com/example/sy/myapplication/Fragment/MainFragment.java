@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,102 +68,76 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
 
         dbUtil = DBUtil.getInstance(getActivity(), "HomeManager.db", null, 1);
 
-        mMyData = new ArrayList[2];
         mMyAdapter = new MyAdapter[2];
 
-        mMyData[0] = dbUtil.getTypeData(StatusSave.TabGrade.URGENT);
-        mMyData[1] = dbUtil.getTypeData(StatusSave.TabGrade.WARNING);
-
         for (int i = 0 ; i < 2 ; i++){
-            final ArrayList<String> data = mMyData[i];
-            mMyAdapter[i] = new MyAdapter(getActivity(), data);
+            final MyAdapter myAdapter = new MyAdapter(getActivity());
+            myAdapter.setTabGrade( i+1 );
+            myAdapter.dataRefresh();
 
-            mListView[i].setAdapter(mMyAdapter[i]);
-            mListView[i].setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                    switch (index) {
-                        case 0:
-                            // open
-                            break;
-                        case 1:
-                            // delete
-                            break;
+            mMyAdapter[i] = myAdapter;
+
+            final SwipeMenuListView swipeMenuView = mListView[i];
+            swipeMenuView.setAdapter(myAdapter);
+            swipeMenuView.setMenuCreator(swipeMenu());
+            //냉장고일때는 삭제만
+            if (StatusSave.getInstance().getCategory() == StatusSave.Category.REFRIGERATOR){
+                swipeMenuView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                        switch (index) {
+                            case 0:
+                                // 삭제
+                                swipeMenuView.closeMenu();
+                                myAdapter.removeItem(position);
+                                break;
+                        }
+                        return false;
                     }
-                    return false;
-                }
-            });
-            mListView[i].setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                });
+            }
+            else{
+                swipeMenuView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                        switch (index) {
+                            case 0:
+                                // 갱신
+                                swipeMenuView.closeMenu();
+                                myAdapter.updateItem(position);
+                                break;
+                            case 1:
+                                // 삭제
+                                swipeMenuView.closeMenu();
+                                myAdapter.removeItem(position);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+            }
+            swipeMenuView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String title = data.get(position);
-                    DRD.DRDialog( getActivity() , title, StatusSave.getInstance().getListView() );
+                    String title = myAdapter.getTitle(position);
+                    String memo = myAdapter.getMemo(position);
+                    DRD.DRDialog( getActivity() , title, memo, StatusSave.getInstance().getListView() );
                 }
             });
-            mListView[i].setMenuCreator(swipeMenu());
+
         }
 
         return root;
     }
-    /*//리스트 터치시 다이얼로그 실행 함수
-    ListView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            List_Item item = (List_Item) parent.getItemAtPosition(position) ;
-            String name = item.getTitle();
 
-            DRD.DRDialog(getActivity(), name, stat.getListView());
-        }
-    };*/
-
-    /*public void list_setting(final ListView lv,final StatusSave.TabGrade tabGrade){
-        if(tabGrade == StatusSave.TabGrade.URGENT){
-            //ALU.listSet(lv,getActivity(), StatusSave.Category.MAIN);
-            lv.setOnItemClickListener(mItemClickListener);
-        }
-        else if(tabGrade == StatusSave.TabGrade.WARNING){
-            //ALU.li_warning(lv,getActivity(), StatusSave.Category.MAIN);
-            lv.setOnItemClickListener(mItemClickListener);
-        }
-        //리스트 슬라이드시
-        SwipeDismissListViewTouchListener touchListener =
-                new SwipeDismissListViewTouchListener(lv,
-                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
-                            @Override
-                            public boolean canDismiss(int position) {
-                                return true;
-                            }
-                            @Override
-                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                                for (int position : reverseSortedPositions) {
-                                    //DBUtil dbUtil = new DBUtil(getActivity(), "HomeManager.db", null, 1);
-
-                                    List_Item item = (List_Item)listView.getAdapter().getItem(position);
-                                    String title = item.getTitle();
-
-                                    //list_update(dbUtil,title,lv,tabGrade);
-                                }
-                            }
-                        });
-        lv.setOnTouchListener(touchListener);
-        lv.setOnScrollListener(touchListener.makeScrollListener());
-    }*/
-    /*public void list_update(DBUtil dbUtil, String s1, ListView lv, StatusSave.TabGrade tabGrade){
-        dbUtil.update(s1); //드래그시 자동갱신
-        if(tabGrade == StatusSave.TabGrade.URGENT){
-            //ALU.listSet(lv,getActivity(), StatusSave.Category.MAIN);
-        }
-        else if(tabGrade == StatusSave.TabGrade.WARNING){
-            //ALU.li_warning(lv,getActivity(), StatusSave.Category.MAIN);
-        }
-    }*/
 
     //정지될시 리스트 재생성, db의 내용이 바뀔 수도 있어서
     @Override
     public void onResume(){
         super.onResume();
+        //어뎁터 데이터들 다시 갱신.
         for (MyAdapter myAdapter : mMyAdapter){
-            myAdapter.notifyDataSetChanged();
+            myAdapter.dataRefresh();
         }
     }
 
@@ -189,22 +164,42 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
             case "제발":
                 stat.setTabGrade(StatusSave.TabGrade.URGENT);
                 stat.setListView(mListView[0]);
-                //ALU.listSet(lv1,getActivity(), stat.getCategory());
                 break;
             case "주의":
                 stat.setTabGrade(StatusSave.TabGrade.WARNING);
                 stat.setListView(mListView[1]);
-                //ALU.listSet(lv2,getActivity(), stat.getCategory());
                 break;
         }
     }
     private SwipeMenuCreator swipeMenu(){
         SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void create(SwipeMenu menu) {
+                // Create different menus depending on the view type
+
+                Log.e("이게무슨", "create: " + menu.getViewType()+ " " + StatusSave.Category.REFRIGERATOR.getNum()  ,null );
+                if (menu.getViewType() == StatusSave.Category.REFRIGERATOR.getNum()){
+                    refrigeratorMenu(menu);
+                }
+                else createMenu(menu);
+            }
+
+            public void refrigeratorMenu(SwipeMenu menu) {
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem( getActivity() );
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(dp2px(90));
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_delete);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+            public void createMenu(SwipeMenu menu) {
                 // create "open" item
-                SwipeMenuItem openItem = new SwipeMenuItem( getContext() );
+                SwipeMenuItem openItem = new SwipeMenuItem( getActivity() );
                 // set item background
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 // set item width
@@ -215,7 +210,7 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
                 menu.addMenuItem(openItem);
 
                 // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem( getContext() );
+                SwipeMenuItem deleteItem = new SwipeMenuItem( getActivity() );
                 // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 // set item width

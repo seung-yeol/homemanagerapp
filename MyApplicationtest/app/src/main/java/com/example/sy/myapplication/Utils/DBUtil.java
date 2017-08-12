@@ -184,6 +184,25 @@ public class DBUtil extends SQLiteOpenHelper {
         cursor.close();
         return result;
     }
+
+    public StatusSave.Category getCategory(String title){
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("select HWTYPE from HOMEMANAGER where NAME ='"+ title +"';", null);
+
+        cursor.moveToNext();
+        int result;
+
+        result = Integer.valueOf(cursor.getString(0));
+        cursor.close();
+
+        for (StatusSave.Category category : StatusSave.Category.values()){
+            if (category.getNum() == result) return category;
+        }
+
+        //이거뜨면 에러나게 만들어야됨.
+        return null;
+    }
+
     //리스트 갱신할 때 실행되는 함수
     public void update(String s){
         SQLiteDatabase db = getWritableDatabase();

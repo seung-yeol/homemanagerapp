@@ -1,6 +1,5 @@
 package com.example.sy.myapplication.Utils;
 
-import android.util.Log;
 import android.widget.ListView;
 
 //normal 인지 warning 인지 urgent 인지 잠시 내용저장하기위한 클래스
@@ -16,12 +15,10 @@ public enum StatusSave {
     private ListView listView;
 
     public void setTabGrade(TabGrade tabGrade){
-        Log.e("이거다ㅏㅏㅏㅏㅏㅏ", "setTabStr: "+tabGrade.getNum());
         this.tabGrade = tabGrade;
     }
     public void setCategory(Category category){
         this.category = category;
-        //Log.i("이거다ㅏㅏㅏㅏㅏㅏ", "setTabStr: "+TabString);
     }
     public void setListView(ListView lv){
         listView = lv;
@@ -51,6 +48,16 @@ public enum StatusSave {
         public int getNum() {
             return num;
         }
+
+        public TabGrade convertForNum(int num){
+            StatusSave.TabGrade tabGrade = null;
+            for (StatusSave.TabGrade mTabGrade : StatusSave.TabGrade.values()) {
+                if (mTabGrade.getNum() == num) {
+                    tabGrade = mTabGrade;
+                }
+            }
+            return tabGrade;
+        }
     }
 
     public enum Category {
@@ -76,6 +83,4 @@ public enum StatusSave {
             return hint;
         }
     }
-
 }
-

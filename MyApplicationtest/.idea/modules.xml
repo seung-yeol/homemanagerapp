@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/library/SwipeListView.iml" filepath="$PROJECT_DIR$/library/SwipeListView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/floating/floating.iml" filepath="$PROJECT_DIR$/floating/floating.iml" />
+      <module fileurl="file://$PROJECT_DIR$/floating/floating.iml" filepath="$PROJECT_DIR$/floating/floating.iml" />
     </modules>
   </component>
 </project>

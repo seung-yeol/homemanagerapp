@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +21,12 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.sy.myapplication.AdderActivity;
-import com.example.sy.myapplication.Tips.ListviewActivity;
 import com.example.sy.myapplication.R;
+import com.example.sy.myapplication.Tips.ListviewActivity;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DRDialog;
-import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.MyAdapter;
+import com.example.sy.myapplication.Utils.StatusSave;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -35,7 +34,6 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import java.util.ArrayList;
 
 public class AnotherFragment extends Fragment implements TabHost.OnTabChangeListener{
-    //private ListSet ALU = new ListSet();
     private DRDialog DRD = new DRDialog();
     private StatusSave stat = StatusSave.getInstance();
     private DBUtil dbUtil;
@@ -93,37 +91,62 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
         mMyData = new ArrayList[3];
         mMyAdapter = new MyAdapter[3];
 
-        mMyData[0] = dbUtil.getTypeData(StatusSave.TabGrade.URGENT);
-        mMyData[1] = dbUtil.getTypeData(StatusSave.TabGrade.WARNING);
-        mMyData[2] = dbUtil.getTypeData(StatusSave.TabGrade.NORMAL);
 
         for (int i = 0 ; i < 3 ; i++){
-            final ArrayList<String> data = mMyData[i];
-            mMyAdapter[i] = new MyAdapter(getActivity(), data);
+            final MyAdapter myAdapter = new MyAdapter(getActivity());
+            myAdapter.setTabGrade( i+1 );
+            myAdapter.dataRefresh();
+            mMyAdapter[i] = myAdapter;
 
-            mListView[i].setAdapter(mMyAdapter[i]);
-            mListView[i].setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                    switch (index) {
-                        case 0:
-                            // open
-                            break;
-                        case 1:
-                            // delete
-                            break;
+            final SwipeMenuListView swipeMenuView = mListView[i];
+            swipeMenuView.setAdapter(myAdapter);
+            swipeMenuView.setMenuCreator(swipeMenu());
+
+            //냉장고일때는 하나만 삭제만 가능하게..
+            if (StatusSave.getInstance().getCategory() == StatusSave.Category.REFRIGERATOR){
+                swipeMenuView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                        switch (index) {
+                            case 0:
+                                // 삭제
+                                swipeMenuView.closeMenu();
+                                myAdapter.removeItem(position);
+                                break;
+                        }
+                        return false;
                     }
-                    return false;
-                }
-            });
-            mListView[i].setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                });
+            }
+            else{
+                swipeMenuView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                        switch (index) {
+                            case 0:
+                                // 갱신
+                                swipeMenuView.closeMenu();
+                                myAdapter.updateItem(position);
+                                break;
+                            case 1:
+                                // 삭제
+                                swipeMenuView.closeMenu();
+                                myAdapter.removeItem(position);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+            }
+            //
+            swipeMenuView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String title = data.get(position);
-                    DRD.DRDialog( getActivity() , title, StatusSave.getInstance().getListView() );
+                    String title = myAdapter.getTitle(position);
+                    String memo = myAdapter.getMemo(position);
+                    DRD.DRDialog( getActivity() , title, memo, StatusSave.getInstance().getListView() );
                 }
             });
-            mListView[i].setMenuCreator(swipeMenu());
         }
 
         return root;
@@ -133,11 +156,10 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
     public void onResume(){
         super.onResume();
 
+        //어뎁터 데이터들 다시 재갱신.
         for (MyAdapter myAdapter : mMyAdapter){
-            myAdapter.notifyDataSetChanged();
+            myAdapter.dataRefresh();
         }
-
-        listRefresh();
 
         actionButton.setVisibility(View.VISIBLE);
         button1.setVisibility(View.VISIBLE);
@@ -147,7 +169,6 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
     @Override
     public void onPause(){
         super.onPause();
-
 
         actionButton.setVisibility(View.GONE);
         button1.setVisibility(View.GONE);
@@ -233,11 +254,31 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
 
     private SwipeMenuCreator swipeMenu(){
         SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
+
             @Override
             public void create(SwipeMenu menu) {
+                // Create different menus depending on the view type
+                if (menu.getViewType() == StatusSave.Category.REFRIGERATOR.getNum()){
+                    refrigeratorMenu(menu);
+                }
+                else createMenu(menu);
+            }
+
+            public void refrigeratorMenu(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem( getActivity() );
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(dp2px(90));
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_delete);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+            public void createMenu(SwipeMenu menu) {
                 // create "open" item
-                SwipeMenuItem openItem = new SwipeMenuItem( getContext() );
+                SwipeMenuItem openItem = new SwipeMenuItem( getActivity() );
                 // set item background
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 // set item width
@@ -248,7 +289,7 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
                 menu.addMenuItem(openItem);
 
                 // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem( getContext() );
+                SwipeMenuItem deleteItem = new SwipeMenuItem( getActivity() );
                 // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 // set item width
@@ -266,31 +307,4 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());
     }
-    public void listRefresh(){
-        mMyData[0] = dbUtil.getTypeData(StatusSave.TabGrade.URGENT);
-        mMyData[1] = dbUtil.getTypeData(StatusSave.TabGrade.WARNING);
-        mMyData[2] = dbUtil.getTypeData(StatusSave.TabGrade.NORMAL);
-
-        for (int i = 0 ; i < 3 ; i++){
-            final ArrayList<String> data = mMyData[i];
-            mMyAdapter[i].listRefresh( mMyData[i] );
-
-            mListView[i].setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String title = data.get(position);
-                    DRD.DRDialog( getActivity() , title, StatusSave.getInstance().getListView() );
-                }
-            });
-        }
-    }
-
-    /*public class exampleSimpleAdapter extends com.baoyz.swipemenulistview.SwipeMenuAdapter{
-
-        public exampleSimpleAdapter(Context context, ListAdapter adapter) {
-            super(context, adapter);
-        }
-
-        AdapterView.OnItemClickListener
-    }*/
 }

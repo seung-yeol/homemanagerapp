@@ -9,8 +9,6 @@
 
     <string name="noti_title"><b>집안꼴이 이게뭐니!</b></string>
 
-    <string name="open_swipe">https://github.com/romannurik/Android-SwipeToDismiss
-        \n Apache License 2.0 \n Published by romannurik</string>
     <string name="open_icon_face">http://www.flaticon.com/packs/emotions-assets
         \n CC 3.0 BY \n Published by Baianat</string>
     <string name="open_icon_main">http://www.flaticon.com/packs/essential-icons
@@ -21,4 +19,6 @@
         \n License free \n Designed by Kamimiart / Freepik</string>
     <string name="floating_button">https://github.com/oguzbilgener/CircularFloatingActionMenu
         \n The MIT License (MIT) \n Published by oguzbilgener</string>
+    <string name="swipe_menu_listview">https://github.com/baoyongzhang/SwipeMenuListView
+        \n The MIT License (MIT) \n Published by baoyongzhang</string>
 </resources>
