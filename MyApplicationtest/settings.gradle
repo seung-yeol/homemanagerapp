@@ -1,2 +1,2 @@
-include ':app', ':SwipeListView'
+include ':app', ':SwipeListView', ':floating'
 project(':SwipeListView').projectDir = new File('library')

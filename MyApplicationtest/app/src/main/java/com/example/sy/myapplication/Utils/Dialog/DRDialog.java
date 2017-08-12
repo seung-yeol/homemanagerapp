@@ -37,10 +37,11 @@ public class DRDialog {
         title.setTextSize(20);
         builder.setCustomTitle(title);
 
+
         // 여기서부터는 알림창의 속성 설정
         builder.setMessage(dbs)        // 메세지 설정
-                .setCancelable(true)        // 뒤로 버튼 클릭시 취소 가능 설정
-                .setNegativeButton("삭제",
+                .setCancelable(true);       // 뒤로 버튼 클릭시 취소 가능 설정
+               /* .setNegativeButton("삭제",
                         new DialogInterface.OnClickListener(){
                             // 삭제 버튼 클릭시 설정
                             public void onClick(DialogInterface dialog, int whichButton){
@@ -82,7 +83,8 @@ public class DRDialog {
                             dialog.cancel();
                         }
                     });
-        }
+        }*/
+
 
         AlertDialog dialog = builder.create();    // 알림창 객체 생성
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND); // 뒤에 안어두워짐

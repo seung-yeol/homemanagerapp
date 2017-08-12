@@ -16,7 +16,9 @@
     <string name="open_icon_main">http://www.flaticon.com/packs/essential-icons
         \n CC 3.0 BY \n Published by Bryn Taylor</string>
     <string name="open_icon_other">http://file000.flaticon.com/downloads/license/license.pdf
-        \n Free License \n designed by from Flaticon</string>
+        \n Free License \n Designed by from Flaticon</string>
     <string name="open_image">http://www.freepik.com
         \n License free \n Designed by Kamimiart / Freepik</string>
+    <string name="floating_button">https://github.com/oguzbilgener/CircularFloatingActionMenu
+        \n The MIT License (MIT) \n Published by oguzbilgener</string>
 </resources>

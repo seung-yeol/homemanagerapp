@@ -17,6 +17,10 @@
             android:id="@+id/refrigerator"
             android:icon="@mipmap/ic_refrigerator"
             android:title="냉장고" />
+        <item
+            android:id="@+id/extra"
+            android:icon="@mipmap/ic_extra"
+            android:title="기타" />
     </group>
 
     <item android:title="ETC">

@@ -8,11 +8,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TabHost;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -20,12 +22,15 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.sy.myapplication.AdderActivity;
+import com.example.sy.myapplication.Tips.ListviewActivity;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DRDialog;
 import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.MyAdapter;
-import com.melnykov.fab.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
 
@@ -40,6 +45,11 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
     final static String s_normal = "괜춘";
 
     private Drawable face_1, face_2, face_3;
+
+    private FloatingActionButton actionButton;
+    public SubActionButton button1;
+    private SubActionButton button2;
+    private FloatingActionMenu actionMenu;
 
     private ArrayList<String>[] mMyData;
     private SwipeMenuListView[] mListView;
@@ -70,7 +80,7 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
         TabHost host = (TabHost)root.findViewById(R.id.tabHost);
         host.setup();
 
-        setFloatngButton(root);
+        setFloatingButton(root);
 
         face_1 = getResources().getDrawable(R.drawable.ic_sad_selector);
         face_2 = getResources().getDrawable(R.drawable.ic_soso_selector);
@@ -118,6 +128,7 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
 
         return root;
     }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -127,14 +138,58 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
         }
 
         listRefresh();
+
+        actionButton.setVisibility(View.VISIBLE);
+        button1.setVisibility(View.VISIBLE);
+        button2.setVisibility(View.VISIBLE);
     }
 
-    public void setFloatngButton(final View root){
-        FloatingActionButton fab = (FloatingActionButton)root.findViewById(R.id.adder);
-        fab.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onPause(){
+        super.onPause();
+
+
+        actionButton.setVisibility(View.GONE);
+        button1.setVisibility(View.GONE);
+        button2.setVisibility(View.GONE);
+    }
+
+    public void setFloatingButton(final View root) {
+        ImageView icon = new ImageView(root.getContext()); // Create an icon
+        icon.setImageDrawable(getResources().getDrawable(R.drawable.more));
+
+        actionButton = new FloatingActionButton.Builder(root.getContext())
+                .setContentView(icon)
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(root.getContext());
+        // repeat many times:
+        ImageView itemIcon = new ImageView(root.getContext());
+        itemIcon.setImageDrawable(getResources().getDrawable(R.drawable.add));
+        button1 = itemBuilder.setContentView(itemIcon).build();
+
+        ImageView itemIcon1 = new ImageView(root.getContext());
+        itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.tips));
+        button2 = itemBuilder.setContentView(itemIcon1).build();
+
+        actionMenu = new FloatingActionMenu.Builder(root.getContext())
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .attachTo(actionButton)
+                .build();
+
+        button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(root.getContext(),AdderActivity.class);
+                Intent intent = new Intent(root.getContext(), AdderActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(root.getContext(), ListviewActivity.class);
                 startActivity(intent);
             }
         });
@@ -206,6 +261,7 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
         };
         return creator;
     }
+
     public int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());

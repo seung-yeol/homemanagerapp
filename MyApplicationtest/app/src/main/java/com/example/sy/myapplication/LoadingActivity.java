@@ -15,10 +15,10 @@ public class LoadingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loading);
 
         StatusBarUtil SBU = new StatusBarUtil();
-        SBU.setStatusBarColor(this, getResources().getColor(R.color.colorPrimaryDark));
+        SBU.setStatusBarColor(this, getResources().getColor(R.color.ColorBar));
 
         Handler hd = new Handler();
-        hd.postDelayed(new splashhandler() , 3000); // 3초 후에 hd Handler 실행
+        hd.postDelayed(new splashhandler() , 1000); // 3초 후에 hd Handler 실행
     }
 
     private class splashhandler implements Runnable{

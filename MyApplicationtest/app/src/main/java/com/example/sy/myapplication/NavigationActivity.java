@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.sy.myapplication.Fragment.AnotherFragment;
 import com.example.sy.myapplication.Fragment.DeveloperFragment;
@@ -55,6 +56,7 @@ public class NavigationActivity extends AppCompatActivity
         Intent service = new Intent(this, MyService.class);
         startService(service);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

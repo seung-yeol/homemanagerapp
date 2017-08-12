@@ -5,13 +5,17 @@
     android:background="@drawable/nav_top_bg"
     android:gravity="bottom"
     android:orientation="vertical"
-
-    android:paddingTop="24dp"
+    android:paddingTop="20dp"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:adjustViewBounds="true"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/loading"/>
+        android:src="@drawable/load"
+        android:maxHeight="100dp"
+        android:maxWidth="100dp" />
 
 </LinearLayout>
