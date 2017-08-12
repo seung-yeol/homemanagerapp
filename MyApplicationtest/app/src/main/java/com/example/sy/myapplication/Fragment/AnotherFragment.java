@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,22 +19,20 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.sy.myapplication.AdderActivity;
+import com.example.sy.myapplication.NavigationActivity;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Tips.ListviewActivity;
-import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DRDialog;
+import com.example.sy.myapplication.Utils.ExampleActionBarDrawerToggle;
 import com.example.sy.myapplication.Utils.MyAdapter;
 import com.example.sy.myapplication.Utils.StatusSave;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
-import java.util.ArrayList;
-
 public class AnotherFragment extends Fragment implements TabHost.OnTabChangeListener{
     private DRDialog DRD = new DRDialog();
     private StatusSave stat = StatusSave.getInstance();
-    private DBUtil dbUtil;
 
     final static String s_urgent = "제발";
     final static String s_warning = "주의";
@@ -49,12 +45,13 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
     private SubActionButton button2;
     private FloatingActionMenu actionMenu;
 
-    private ArrayList<String>[] mMyData;
     private SwipeMenuListView[] mListView;
     private MyAdapter[] mMyAdapter;
+    private NavigationActivity parent;
 
-    public static AnotherFragment newInstance(){
+    public static AnotherFragment newInstance(NavigationActivity parent){
         AnotherFragment INSTANCE = new AnotherFragment();
+        INSTANCE.parent = parent;
         Bundle args =  new Bundle();
         INSTANCE.setArguments(args);
 
@@ -79,6 +76,21 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
         host.setup();
 
         setFloatingButton(root);
+        parent.flBtnDelListener(new ExampleActionBarDrawerToggle.DrawerSlideListener() {
+            @Override
+            public void onDrawerSlide() {
+                actionButton.setVisibility(View.INVISIBLE);
+                button1.setVisibility(View.INVISIBLE);
+                button2.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onDrawerClosed() {
+                actionButton.setVisibility(View.VISIBLE);
+                button1.setVisibility(View.VISIBLE);
+                button2.setVisibility(View.VISIBLE);
+            }
+        });
 
         face_1 = getResources().getDrawable(R.drawable.ic_sad_selector);
         face_2 = getResources().getDrawable(R.drawable.ic_soso_selector);
@@ -86,9 +98,6 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
 
         setTabHost(root);
 
-        dbUtil = DBUtil.getInstance();
-
-        mMyData = new ArrayList[3];
         mMyAdapter = new MyAdapter[3];
 
 
@@ -161,18 +170,18 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
             myAdapter.dataRefresh();
         }
 
-        actionButton.setVisibility(View.VISIBLE);
+        /*actionButton.setVisibility(View.VISIBLE);
         button1.setVisibility(View.VISIBLE);
-        button2.setVisibility(View.VISIBLE);
+        button2.setVisibility(View.VISIBLE);*/
     }
 
     @Override
     public void onPause(){
         super.onPause();
 
-        actionButton.setVisibility(View.GONE);
+        /*actionButton.setVisibility(View.GONE);
         button1.setVisibility(View.GONE);
-        button2.setVisibility(View.GONE);
+        button2.setVisibility(View.GONE);*/
     }
 
     public void setFloatingButton(final View root) {
@@ -219,15 +228,15 @@ public class AnotherFragment extends Fragment implements TabHost.OnTabChangeList
     public void setTabHost( View root ){
         TabHost host = (TabHost)root.findViewById(R.id.tabHost);
 
-        setTabWiget(host, face_1, R.id.tab1, s_urgent);
-        setTabWiget(host, face_2, R.id.tab2, s_warning);
-        setTabWiget(host, face_3, R.id.tab3, s_normal);
+        setTabWidget(host, face_1, R.id.tab1, s_urgent);
+        setTabWidget(host, face_2, R.id.tab2, s_warning);
+        setTabWidget(host, face_3, R.id.tab3, s_normal);
 
         host.setOnTabChangedListener(this);
         host.setup();
     }
 
-    public void setTabWiget(TabHost host, Drawable draw, int i, String s){
+    public void setTabWidget(TabHost host, Drawable draw, int i, String s){
         TabHost.TabSpec spec = host.newTabSpec(s);
         spec.setContent(i);
         spec.setIndicator("",draw);

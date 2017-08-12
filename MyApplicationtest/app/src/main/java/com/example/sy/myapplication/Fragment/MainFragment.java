@@ -4,9 +4,7 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.TypedValue;
@@ -23,22 +21,17 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.sy.myapplication.R;
 import com.example.sy.myapplication.Utils.DBUtil;
 import com.example.sy.myapplication.Utils.Dialog.DRDialog;
-import com.example.sy.myapplication.Utils.StatusSave;
 import com.example.sy.myapplication.Utils.MyAdapter;
-
-import java.util.ArrayList;
+import com.example.sy.myapplication.Utils.StatusSave;
 
 
 public class MainFragment extends Fragment implements TabHost.OnTabChangeListener{
-    //private ListSet ALU = new ListSet();
     private DRDialog DRD = new DRDialog();
     private StatusSave stat = StatusSave.getInstance();
-    private DBUtil dbUtil;
 
     final static String s_urgent = "제발";
     final static String s_warning = "주의";
 
-    private ArrayList<String>[] mMyData;
     private SwipeMenuListView[] mListView;
     private MyAdapter[] mMyAdapter;
 
@@ -66,7 +59,7 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
 
         setTabHost( root );
 
-        dbUtil = DBUtil.getInstance(getActivity(), "HomeManager.db", null, 1);
+        DBUtil.getInstance(getActivity(), "HomeManager.db", null, 1);
 
         mMyAdapter = new MyAdapter[2];
 
@@ -80,42 +73,26 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
             final SwipeMenuListView swipeMenuView = mListView[i];
             swipeMenuView.setAdapter(myAdapter);
             swipeMenuView.setMenuCreator(swipeMenu());
-            //냉장고일때는 삭제만
-            if (StatusSave.getInstance().getCategory() == StatusSave.Category.REFRIGERATOR){
-                swipeMenuView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                        switch (index) {
-                            case 0:
-                                // 삭제
-                                swipeMenuView.closeMenu();
-                                myAdapter.removeItem(position);
-                                break;
-                        }
-                        return false;
+            //냉장고일때는 삭제만해야하지만 리스너가 하나만 있는 이유는 갱신 시도중 냉장고체크되면 알아서 딜리트됨
+            swipeMenuView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                    switch (index) {
+                        case 0:
+                            // 갱신
+                            swipeMenuView.closeMenu();
+                            myAdapter.updateItem(position);
+                            break;
+                        case 1:
+                            // 삭제
+                            swipeMenuView.closeMenu();
+                            myAdapter.removeItem(position);
+                            break;
                     }
-                });
-            }
-            else{
-                swipeMenuView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                        switch (index) {
-                            case 0:
-                                // 갱신
-                                swipeMenuView.closeMenu();
-                                myAdapter.updateItem(position);
-                                break;
-                            case 1:
-                                // 삭제
-                                swipeMenuView.closeMenu();
-                                myAdapter.removeItem(position);
-                                break;
-                        }
-                        return false;
-                    }
-                });
-            }
+                    return false;
+                }
+            });
+
             swipeMenuView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -129,7 +106,6 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
 
         return root;
     }
-
 
     //정지될시 리스트 재생성, db의 내용이 바뀔 수도 있어서
     @Override

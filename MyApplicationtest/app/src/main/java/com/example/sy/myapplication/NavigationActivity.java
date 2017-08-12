@@ -8,25 +8,26 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.sy.myapplication.Fragment.AnotherFragment;
 import com.example.sy.myapplication.Fragment.DeveloperFragment;
 import com.example.sy.myapplication.Fragment.LicenseFragment;
 import com.example.sy.myapplication.Fragment.MainFragment;
 import com.example.sy.myapplication.Service.MyService;
+import com.example.sy.myapplication.Utils.ExampleActionBarDrawerToggle;
 import com.example.sy.myapplication.Utils.StatusSave;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    FragmentManager FragM = getFragmentManager();
-    FragmentTransaction transaction = FragM.beginTransaction();
+    private FragmentManager FragM = getFragmentManager();
+    private FragmentTransaction transaction = FragM.beginTransaction();
+
+    private ExampleActionBarDrawerToggle toggle;
 
 
     private StatusSave statusSave = StatusSave.getInstance();
@@ -45,9 +46,9 @@ public class NavigationActivity extends AppCompatActivity
         transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ExampleActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -97,11 +98,11 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.laundry)
-            fragmentSelect(AnotherFragment.newInstance(),"빨래",StatusSave.Category.LAUNDRY);
+            fragmentSelect(AnotherFragment.newInstance(this),"빨래",StatusSave.Category.LAUNDRY);
         else if (id == R.id.refrigerator)
-            fragmentSelect(AnotherFragment.newInstance(),"냉장고",StatusSave.Category.REFRIGERATOR);
+            fragmentSelect(AnotherFragment.newInstance(this),"냉장고",StatusSave.Category.REFRIGERATOR);
         else if (id == R.id.clear_up)
-            fragmentSelect(AnotherFragment.newInstance(),"청소",StatusSave.Category.CLEARUP);
+            fragmentSelect(AnotherFragment.newInstance(this),"청소",StatusSave.Category.CLEARUP);
         else if (id == R.id.nav_developer)
             fragmentSelect(new DeveloperFragment(),"개발자",StatusSave.Category.DEVELOPER);
         else if (id == R.id.nav_license)
@@ -124,5 +125,9 @@ public class NavigationActivity extends AppCompatActivity
 
         transaction.replace(R.id.frag, frag);
         transaction.commit();
+    }
+
+    public void flBtnDelListener(ExampleActionBarDrawerToggle.DrawerSlideListener DSL){
+        toggle.addDrawerSlideListener(DSL);
     }
 }
